@@ -368,7 +368,7 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 /*Roles*/
-$config['admin_role'] = 'Admin';
+$config['admin_role'] = 'Hr';
 $config['manager_role'] = 'Manager';
 $config['trainer_role'] = 'Trainer';
 $config['user_role'] = 'User';
