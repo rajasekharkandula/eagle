@@ -17,18 +17,20 @@
 						<i class="fa fa-caret-down"></i>
 					</a>
 					<ul class="dropdown-menu dropdown-menu-right">
-						<li><?php echo $this->session->userdata('user_name'); ?></li>
-						<li><a href="#">Profile</a></li>
-						<li><a href="<?php echo base_url('home/logout'); ?>">Logout</a></li>
+						<li class="uname"><?php echo $this->session->userdata('user_name'); ?></li>
+						<li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+						<li><a href="<?php echo base_url('home/logout'); ?>"><i class="fa fa-sign-out"></i> Logout</a></li>
 					<ul>
 				</li>
 			</ul>
 		</div>
 	</nav>
+	
+	<?php if($this->session->userdata("role_name") == $this->config->item("admin_role")){ ?>
 	<nav class="nav">
 		<div class="container">
 			<ul class="header-menu">				
-				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url();?>learner/dashboard">Dashboard</a></li>
+				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url();?>">Dashboard</a></li>
                 <li class="dropdown <?php if($page == 'MANAGE')echo 'active'; ?>">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage</a>
 					<ul class="dropdown-menu">
@@ -45,16 +47,26 @@
 						<li><a href="<?php echo base_url();?>admin/assessments">Assessments</a></li>
 					</ul>
 				</li>
-                <!--li class="dropdown <?php if($page == 'GAME')echo 'active'; ?>">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Games</a>
-					<ul class="dropdown-menu">
-						<li><a href="<?php echo base_url();?>learner/games">My Games</a></li>
-						<li><a href="<?php echo base_url();?>learner/games/mandatory">Mandatory Games</a></li>
-						<li><a href="<?php echo base_url();?>learner/games/recommended">Recommended Games</a></li>
-					</ul>
-				</li-->				
-			</ul>
+             </ul>
 		</div>
     </nav>
+	<?php } ?>
+	
+	<?php if($this->session->userdata("role_name") == $this->config->item("manager_role")){ ?>
+	<nav class="nav">
+		<div class="container">
+			<ul class="header-menu">				
+				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url();?>">Dashboard</a></li>
+                <li class="dropdown <?php if($page == 'MANAGE')echo 'active'; ?>">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Team</a>
+					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url();?>manager/users">Team List</a></li>
+					</ul>
+				</li>
+             </ul>
+		</div>
+    </nav>
+	<?php } ?>
+	
 
 </header>

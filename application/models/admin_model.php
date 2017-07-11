@@ -14,7 +14,7 @@ class Admin_model extends CI_Model{
 		$id = isset($data['id']) ? (int)$data['id'] : 0;
 		
 		if($type == 'ALL'){
-			return $this->db->query("SELECT * FROM tbl_user")->result();
+			return $this->db->query("SELECT u.*,r.name as role_name,d.name as designation FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id INNER JOIN tbl_designation d ON d.id = u.designation")->result();
 		}
 		if($type == 'S'){
 			return $this->db->query("SELECT * FROM tbl_user WHERE id = $id")->row();
@@ -24,8 +24,7 @@ class Admin_model extends CI_Model{
 		}
 		if($type == 'TRAINERS'){
 			return $this->db->query("SELECT * FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id WHERE r.name = '".$this->config->item('trainer_role')."'")->result();
-		}
-		
+		}		
 	}
 	function ins_upd_user(){
 		$return['status'] = false;$return['message'] = 'Failed';
@@ -37,6 +36,7 @@ class Admin_model extends CI_Model{
 		$username = (string)$this->input->post('username');
 		$password = (string)$this->input->post('password');
 		$email = (string)$this->input->post('email');
+		$uid = (string)$this->input->post('uid');
 		$phone = (string)$this->input->post('phone');
 		$user_role = $this->input->post('user_role');
 		$designation = (int)$this->input->post('designation');
@@ -44,29 +44,44 @@ class Admin_model extends CI_Model{
 		
 		$user_image = file_exists($user_image) ? $user_image : $this->config->item('default_user_img');
 		
+		
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$return['message'] = 'Invalid Email';
+			return $return;
+		}
+		if (strlen($password) < 5 && $password != '') {
+			$return['message'] = 'Password must contain atleast 5 characters';
+			return $return;
+		}
+		
+		
 		if($type == 'INSERT'){			
-			$user = $this->db->query("SELECT * FROM tbl_user WHERE username = '$username' OR email = '$email'")->row();
+			$user = $this->db->query("SELECT * FROM tbl_user WHERE username = '$username' OR email = '$email' OR uid = '$uid'")->row();
 			if($user){
 				if($user->username == $username)
 					$return['message'] = 'Username already exists';
 				if($user->email == $email)
 					$return['message'] = 'Username already exists';
+				if($user->uid == $uid)
+					$return['message'] = 'Employee ID already exists';
 				return $return;
 			}
-			$this->db->query("INSERT INTO tbl_user (entity_id, first_name, last_name, username, email, password, image, role_id, designation, manager_id, created_by, updated_by, created_date, updated_date, status) VALUES ($this->entity_id, '$first_name', '$last_name', '$username', '$email', '$password', '$user_image', $user_role, $designation, $manager_id, $this->user_id, $this->user_id, NOW(), NOW(), 'Active'); ");
+			$this->db->query("INSERT INTO tbl_user (entity_id, uid, first_name, last_name, username, email, password, image, role_id, designation, manager_id, created_by, updated_by, created_date, updated_date, status) VALUES ($this->entity_id, '$uid', '$first_name', '$last_name', '$username', '$email', '$password', '$user_image', $user_role, $designation, $manager_id, $this->user_id, $this->user_id, NOW(), NOW(), 'Active'); ");
 			$return['status'] = true;
 			$return['message'] = 'User created successfully';
 		}
 		if($type == 'UPDATE'){			
-			$user = $this->db->query("SELECT * FROM tbl_user WHERE (username = '$username' OR email = '$email') AND id != $id")->row();
+			$user = $this->db->query("SELECT * FROM tbl_user WHERE (username = '$username' OR email = '$email' OR uid = '$uid') AND id != $id")->row();
 			if($user){
 				if($user->username == $username)
 					$return['message'] = 'Username already exists';
 				if($user->email == $email)
-					$return['message'] = 'Username already exists';
+					$return['message'] = 'Email already exists';
+				if($user->uid == $uid)
+					$return['message'] = 'Employee ID already exists';
 				return $return;
 			}
-			$this->db->query("UPDATE tbl_user SET first_name = '$first_name', last_name = '$last_name', username = '$username', email = '$email', image = '$user_image', role_id = $user_role, designation = '$designation', manager_id = $manager_id, updated_by = $this->user_id, updated_date = NOW() WHERE id = $id");
+			$this->db->query("UPDATE tbl_user SET uid = '$uid', first_name = '$first_name', last_name = '$last_name', username = '$username', email = '$email', image = '$user_image', role_id = $user_role, designation = '$designation', manager_id = $manager_id, updated_by = $this->user_id, updated_date = NOW() WHERE id = $id");
 			
 			if($password != ''){
 				$this->db->query("UPDATE tbl_user SET password = '$password' WHERE id = $id");

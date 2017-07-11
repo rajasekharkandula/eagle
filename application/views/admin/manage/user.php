@@ -32,7 +32,7 @@
 								<label class="col-md-3">Image</label>
 								<div class="col-md-8">
 									<a href="#" class="btn btn-sm mb-5 fileinput-button">Upload <input class="fileupload" id="image_upload" type="file" name="files" save_path="image_file_path"></a>
-									<input type="hidden" name="user_image" id="image_file_path" value="<?php if(isset($user->image)){echo $user->image; }?>" va_req="true"/>
+									<input type="hidden" name="user_image" id="image_file_path" value="<?php if(isset($user->image)){echo $user->image; }?>"/>
 									<?php if(isset($user->image)){ ?>
 										<img src="<?php echo base_url($user->image); ?>" class="preview_img">
 									<?php } ?>
@@ -48,6 +48,12 @@
 								<label class="col-md-3">Password <?php if(!isset($user->username)){ ?><span>*</span><?php } ?></label>
 								<div class="col-md-8">
 									<input type="text" <?php if(!isset($user->username)){ ?>va_req="true"<?php } ?> name="password" placeholder="Enter password">
+								</div>
+							</div>
+							<div class="row mb-15">
+								<label class="col-md-3">Employee ID <span>*</span></label>
+								<div class="col-md-8">
+									<input type="text" va_req="true" name="uid" placeholder="Enter employee ID" value="<?php if(isset($user->uid))echo $user->uid; ?>">
 								</div>
 							</div>
 							<div class="row mb-15">
@@ -74,9 +80,9 @@
 								</div>
 							</div>
 							<div class="row mb-15">
-								<label class="col-md-3">Designation</label>
+								<label class="col-md-3">Designation <span>*</span></label>
 								<div class="col-md-8">
-									<select class="select2" data-placeholder="Select designation" name="designation">
+									<select class="select2" data-placeholder="Select designation" name="designation" va_req="true">
 										<option></option>
 										<?php foreach($designations as $d){ ?>
 										<option value="<?php echo $d->id; ?>" <?php if(isset($user->designation))if($user->designation == $d->id)echo 'selected'; ?>><?php echo $d->name; ?></option>	
@@ -147,8 +153,10 @@
 			else{
 				$('#submit_btn').removeAttr("disabled");
 				$('#submit_btn').html('Submit');
+				$('.disable_div').remove();
 				$.notify({ message: data.message},{type: 'danger'});
 			}
+			
 		});
 	}
 	$('#submit_btn').on('click',function(){

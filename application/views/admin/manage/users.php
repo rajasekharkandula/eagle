@@ -24,22 +24,26 @@
 			<table class="table table-bordered">
 				<thead>
 				  <tr>
+					<th>Employee ID</th>
 					<th>Name</th>
 					<th>Username</th>
 					<th>Email</th>
 					<th>Role</th>
-					<th>Created On</th>
+					<th>Designation</th>
+					<th>Joined On</th>
 					<th>Actions</th>
 				  </tr>
 				</thead>
 				<tbody>
 				  <?php foreach($users as $u){ ?>
 				  <tr>
+					<td><?php echo $u->uid; ?></td>
 					<td><?php echo $u->first_name.' '.$u->last_name; ?></td>
 					<td><?php echo $u->username; ?></td>
 					<td><?php echo $u->email; ?></td>
-					<td><?php echo $u->role_id; ?></td>
-					<td><?php echo $u->created_date; ?></td>
+					<td><?php echo $u->role_name; ?></td>
+					<td><?php echo $u->designation; ?></td>
+					<td><?php echo date('d M Y H:i A',strtotime($u->created_date)); ?></td>
 					<td><a href="<?php echo base_url('admin/user/'.$u->id); ?>" class="btn btn-sm"><i class="fa fa-pencil-square-o"></i> Edit</a></td>
 				  </tr>
 				  <?php } ?>
