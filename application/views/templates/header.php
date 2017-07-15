@@ -18,7 +18,8 @@
 					</a>
 					<ul class="dropdown-menu dropdown-menu-right">
 						<li class="uname"><?php echo $this->session->userdata('user_name'); ?></li>
-						<li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+						<li><a href="<?php echo base_url('home/profile')?>"><i class="fa fa-user"></i> Profile</a></li>
+						<li><a href="<?php echo base_url('home/changepassword')?>"><i class="fa fa-user"></i> Change Password</a></li>
 						<li><a href="<?php echo base_url('home/logout'); ?>"><i class="fa fa-sign-out"></i> Logout</a></li>
 					<ul>
 				</li>
@@ -37,6 +38,7 @@
 						<li><a href="<?php echo base_url();?>admin/users">Users</a></li>
 						<li><a href="<?php echo base_url();?>admin/designations">Designations</a></li>
 						<li><a href="<?php echo base_url();?>admin/skills">Skills</a></li>
+						<li><a href="<?php echo base_url();?>admin/departments">Departments</a></li>
 					</ul>
 				</li>
 				<li class="dropdown <?php if($page == 'COURSE')echo 'active'; ?>">
@@ -61,6 +63,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Team</a>
 					<ul class="dropdown-menu">
 						<li><a href="<?php echo base_url();?>manager/users">Team List</a></li>
+						<li><a href="<?php echo base_url();?>manager/courses">Courses</a></li>
 					</ul>
 				</li>
              </ul>

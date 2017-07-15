@@ -28,6 +28,7 @@ class Admin extends CI_Controller {
 		$data['designations'] = $this->admin_model->get_designation(array('type'=>'ALL'));
 		$this->load->view('admin/manage/designations',$data);
 	}
+
 	function designation($id=0)
 	{		
 		$data = array();$pageData = array();
@@ -37,6 +38,28 @@ class Admin extends CI_Controller {
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
 		$data['designation'] = $this->admin_model->get_designation(array('type'=>'S','id'=>$id));
 		$this->load->view('admin/manage/designation',$data);
+	}
+	
+		function departments()
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'MANAGE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['departments'] = $this->admin_model->get_department(array('type'=>'ALL'));
+		$this->load->view('admin/manage/departments',$data);
+	}
+	
+	function department($id=0)
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'MANAGE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['department'] = $this->admin_model->get_department(array('type'=>'S','id'=>$id));
+		$this->load->view('admin/manage/department',$data);
 	}
 	
 	function skills()
@@ -189,6 +212,9 @@ class Admin extends CI_Controller {
 	}
 	function ins_upd_designation(){
 		echo json_encode($this->admin_model->ins_upd_designation());
+	}
+	function ins_upd_department(){
+		echo json_encode($this->admin_model->ins_upd_department());
 	}
 	function ins_upd_skill(){
 		echo json_encode($this->admin_model->ins_upd_skill());

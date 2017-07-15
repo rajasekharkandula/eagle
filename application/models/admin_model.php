@@ -17,14 +17,21 @@ class Admin_model extends CI_Model{
 			return $this->db->query("SELECT u.*,r.name as role_name,d.name as designation FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id INNER JOIN tbl_designation d ON d.id = u.designation")->result();
 		}
 		if($type == 'S'){
-			return $this->db->query("SELECT * FROM tbl_user WHERE id = $id")->row();
+			return $this->db->query("SELECT u.*, (select name from tbl_designation where id =u.designation limit 1 )as designation FROM tbl_user u WHERE u.id = $id")->row();
 		}
 		if($type == 'MANAGERS'){
 			return $this->db->query("SELECT * FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id WHERE r.name = '".$this->config->item('manager_role')."'")->result();
 		}
 		if($type == 'TRAINERS'){
 			return $this->db->query("SELECT * FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id WHERE r.name = '".$this->config->item('trainer_role')."'")->result();
-		}		
+		}	
+		if($type == 'MANAGER_TEAM'){
+			return $this->db->query("SELECT u.*,d.name as designation FROM tbl_user u INNER JOIN tbl_designation d on d.id= u.designation WHERE u.manager_id = '".$id."'")->result();
+		}
+		if($type == 'USERVIEW'){
+			return $this->db->query("SELECT * FROM tbl_user u INNER JOIN tbl_designation d on d.id= u.designation WHERE u.id = '".$id."'")->row();
+		}
+		
 	}
 	function ins_upd_user(){
 		$return['status'] = false;$return['message'] = 'Failed';
@@ -45,15 +52,16 @@ class Admin_model extends CI_Model{
 		$user_image = file_exists($user_image) ? $user_image : $this->config->item('default_user_img');
 		
 		
-		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			$return['message'] = 'Invalid Email';
-			return $return;
+		if($type == 'INSERT' || $type == 'UPDATE'){
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				$return['message'] = 'Invalid Email';
+				return $return;
+			}
+			if (strlen($password) < 5 && $password != '') {
+				$return['message'] = 'Password must contain atleast 5 characters';
+				return $return;
+			}
 		}
-		if (strlen($password) < 5 && $password != '') {
-			$return['message'] = 'Password must contain atleast 5 characters';
-			return $return;
-		}
-		
 		
 		if($type == 'INSERT'){			
 			$user = $this->db->query("SELECT * FROM tbl_user WHERE username = '$username' OR email = '$email' OR uid = '$uid'")->row();
@@ -90,6 +98,18 @@ class Admin_model extends CI_Model{
 			$return['status'] = true;
 			$return['message'] = 'User updated successfully';
 		}
+		if($type == 'CHANGEPASSWORD'){
+			$newpassword = (string)$this->input->post('newpassword');
+			$password=$this->db->query("select * from tbl_user where id=$this->user_id and password='$password'")->row();
+			if($password){
+				$this->db->query("UPDATE tbl_user SET password = '$newpassword' WHERE id = $this->user_id");
+				$return['status'] = true;
+				$return['message'] = 'Password updated successfully';
+			}else{
+				$return['message'] = 'Current password incorrect';
+			}
+		}
+		
 		return $return;
 	}
 	
@@ -113,6 +133,7 @@ class Admin_model extends CI_Model{
 			return $this->db->query("SELECT * FROM tbl_designation WHERE id = $id")->row();
 		}		
 	}
+
 	function ins_upd_designation(){
 		$return['status'] = false;$return['message'] = 'Failed';
 		$type = (string)$this->input->post('type');
@@ -132,6 +153,39 @@ class Admin_model extends CI_Model{
 		}
 		return $return;
 	}
+
+	function get_department($data){
+		$type = isset($data['type']) ? $data['type'] : '';
+		$id = isset($data['id']) ? (int)$data['id'] : 0;
+		
+		if($type == 'ALL'){
+			return $this->db->query("SELECT * FROM tbl_department")->result();
+		}
+		if($type == 'S'){
+			return $this->db->query("SELECT * FROM tbl_department WHERE id = $id")->row();
+		}		
+	}
+	
+	function ins_upd_department(){
+		$return['status'] = false;$return['message'] = 'Failed';
+		$type = (string)$this->input->post('type');
+		$id = (int)$this->input->post('id');
+		$name = (string)$this->input->post('name');
+		
+		if($type == 'INSERT'){			
+			$this->db->query("INSERT INTO tbl_department (name, entity_id, created_by, created_date, status) VALUES ('$name', $this->entity_id, $this->user_id, NOW(), 'Active'); ");
+			$return['status'] = true;
+			$return['message'] = 'Department created successfully';
+		}
+		if($type == 'UPDATE'){			
+			$this->db->query("UPDATE tbl_department SET name = '$name', created_by = $this->user_id, created_date = NOW() WHERE id = $id");
+			
+			$return['status'] = true;
+			$return['message'] = 'Department updated successfully';
+		}
+		return $return;
+	}
+	
 	function get_skill($data){
 		$type = isset($data['type']) ? $data['type'] : '';
 		$id = isset($data['id']) ? (int)$data['id'] : 0;
@@ -194,6 +248,9 @@ class Admin_model extends CI_Model{
 	function get_course($data){
 		$type = isset($data['type']) ? $data['type'] : '';
 		$id = isset($data['id']) ? (int)$data['id'] : 0;
+		$categories = isset($data['categories']) ? $data['categories'] : false;
+		$searchkey = isset($data['searchkey']) ? $data['searchkey'] : '';
+		
 		
 		if($type == 'ALL'){
 			return $this->db->query("SELECT c.*,cc.name as category_name FROM tbl_course c INNER JOIN tbl_course_category cc ON cc.id = c.category_id")->result();
@@ -203,7 +260,22 @@ class Admin_model extends CI_Model{
 		}
 		if($type == 'S_P'){
 			return $this->db->query("SELECT p.*,c.name as category_name FROM tbl_course_published p INNER JOIN tbl_course_category c ON c.id=p.category_id WHERE p.id = $id")->row();
-		}		
+		}
+		if($type == 'COURSES'){
+			return $this->db->query("SELECT cp.*,cc.name as category_name FROM tbl_course_published cp INNER JOIN tbl_course_category cc on cc.id=cp.category_id")->result();
+		}
+		if($type == 'SEARCH'){
+			
+			$query="SELECT cp.*,cc.name as category_name FROM tbl_course_published cp INNER JOIN tbl_course_category cc on cc.id=cp.category_id where cp.status='Saved' ";
+			if($categories){
+				$query.=" and cc.id in (" .implode(",",$categories) .")" ;
+			}
+			
+			if($searchkey != "")
+				$query.=" and cp.name like '%" .$searchkey ."%'";
+			 
+			return $this->db->query($query)->result();
+		}
 	}
 	function ins_upd_course(){
 		$return['status'] = false;$return['message'] = 'Failed';

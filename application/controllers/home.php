@@ -2,8 +2,10 @@
 
 class Home extends CI_Controller {
 	public function __construct(){
+		
 		parent::__construct();
 		$this->load->model('home_model');
+		$this->load->model('admin_model');
 	}
 	function index()
 	{
@@ -30,6 +32,24 @@ class Home extends CI_Controller {
 	function logout(){
 		$this->session->sess_destroy();
 		redirect(base_url());
+	}
+	function profile(){
+		$data = array();$pageData = array();
+		$pageData['page'] = '';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['user'] = $this->admin_model->get_user(array('type'=>'S','id'=>$this->session->userdata('user_id')));
+		$this->load->view('home/profile',$data);
+	}
+	function changepassword(){
+		$data = array();$pageData = array();
+		$pageData['page'] = '';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['user'] = $this->admin_model->get_user(array('type'=>'S','id'=>$this->session->userdata('user_id')));
+		$this->load->view('home/changepassword',$data);
 	}
 }
 
