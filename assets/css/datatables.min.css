@@ -1,0 +1,20 @@
+/*
+ * This combined file was created by the DataTables downloader builder:
+ *   https://datatables.net/download
+ *
+ * To rebuild or modify this file with the latest versions of the included
+ * software please visit:
+ *   https://datatables.net/download/#dt/dt-1.10.15
+ *
+ * Included libraries:
+ *   DataTables 1.10.15
+ */
+table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{cursor:pointer;*cursor:hand}table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{background-repeat:no-repeat;background-position:center right}table.dataTable thead .sorting{background-image:url("../images/icons/sort_both.png")}table.dataTable thead .sorting_asc{background-image:url("../images/icons/sort_asc.png")}table.dataTable thead .sorting_desc{background-image:url("../images/icons/sort_desc.png")}table.dataTable thead .sorting_asc_disabled{background-image:url("../images/icons/sort_asc_disabled.png")}table.dataTable thead .sorting_desc_disabled{background-image:url("../images/icons/sort_desc_disabled.png")}
+.dataTables_length{float:left; padding-top: 10px;padding-left: 5px;}
+.dataTables_length select{ background-color: #000; color: #fff; border-color: #3e3e3e; border-radius: 5px; padding: 5px 10px; outline:none;}
+.dataTables_filter{float:right; margin-bottom: 20px;}
+.dataTables_filter input{height: 35px; margin-left:5px;padding: 5px 10px; border: 1px solid #444; outline:none; border-radius:5px; background:rgba(0,0,0,0.7); color:#fff;}
+.dataTables_info{float:left;}
+.dataTables_paginate{float:right;}
+.paginate_button{ background-color: #3c3d3d; padding: 3px 10px 5px; border-radius: 5px; margin-right: 5px;cursor:pointer;}
+.paginate_button.current{ background-color: #b5de04;}

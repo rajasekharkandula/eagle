@@ -5,6 +5,7 @@
 <script src="<?php echo base_url('assets/js/bootstrap.notify.min.js'); ?>" type="text/javascript"></script>
 <script src="<?php echo base_url('assets/js/select2.min.js'); ?>" type="text/javascript"></script>
 <script src="<?php echo base_url('assets/js/tinymce/tinymce.min.js'); ?>" type="text/javascript"></script>
+<script src="<?php echo base_url('assets/js/datatables.min.js'); ?>" type="text/javascript"></script>
 
 <script src="<?php echo base_url('assets/js/jquery.ui.widget.js'); ?>" type="text/javascript"></script>
 <script src="<?php echo base_url('assets/js/fileupload/js/jquery.iframe-transport.js'); ?>"></script>

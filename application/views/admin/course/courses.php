@@ -16,7 +16,7 @@
 				</div>
 				<div class="col-md-2">
 					<div class="page-actions text-right">
-						<a href="<?php echo base_url('admin/course_basic'); ?>" class="btn"><i class="fa fa-plus"></i> Add course</a>
+						<a href="<?php echo base_url('admin/course/basic'); ?>" class="btn"><i class="fa fa-plus"></i> Add course</a>
 					</div>
 				</div>
 			</div>
@@ -35,14 +35,14 @@
 							<ul class="dropdown-menu">
 								<li><a href="<?php echo base_url('admin/elearning/basic/'.$c->id); ?>">Elearning Content</a></li>
 								<li><a href="#">Elearning Statistics</a></li>
-								<li><a href="#">Classroom Sessions</a></li>
+								<li class="hide"><a href="#">Classroom Sessions</a></li>
 							</ul>
 						</div>
 						<div class="sb">
 							<a href="<?php echo base_url('admin/course/basic/'.$c->id); ?>">Edit</a>
 						</div>
 						<div class="sb">
-							<a href="#">Users</a>
+							<a href="<?php echo base_url('admin/course_users/'.$c->id); ?>">Users</a>
 						</div>
 					</div>
 				</div>

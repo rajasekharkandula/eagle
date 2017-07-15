@@ -21,7 +21,7 @@ label{
 label span{
 	color:#e41919;
 }
-input{
+input[type=text],input[type=password],input[type=number],textarea{
 	width: 100%;
     height: 37px;
     padding: 5px 10px;
@@ -31,8 +31,14 @@ input{
 	background:rgba(0,0,0,0.7);
 	color:#fff;
 }
+textarea{
+	height:auto;
+}
 input:focus{
 	border-color:#5d6b25;
+}
+input[type=checkbox]{
+	height:auto;
 }
 .btn{
 	background: rgba(0,0,0,0.7);
@@ -67,12 +73,15 @@ input:focus{
 	background: rgba(62, 62, 62, 0.71);
     border-radius: 5px;
     padding: 15px;
+	display: inline-block;
+    width: 100%;
+
 }
 .box .table th{
 	padding: 5px 10px 8px;
 }
 .select2{
-	width:100%;
+	width:100% !important;
 }
 .select2-container--default .select2-selection--single{
 	background-color: #0f1010;
@@ -107,8 +116,51 @@ input:focus{
 	background-color: #0f1010;
     border: 1px solid #3e3e3e;
 }
+.modal-header{
+	display:block;
+	color:#000;
+}
+.modal-dialog {
+    max-width: 70%;
+}
+.nav-tabs {
+    border: 1px solid #3e3e3e;
+    margin-bottom: 10px;
+}
+.nav-tabs .nav-link {
+	border:0px;
+    border-right: 1px solid #3e3e3e;
+    border-radius: 0px;
+    padding: 10px 25px 12px;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #161616;
+     border-color: #3e3e3e;
+	border-radius: 0px;
+}
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    border-color: #3e3e3e;
+    border-radius: 0px;
+}
+.nav-tabs .nav-item {
+    margin-bottom: 0px;
+}
 .va_form_error .close{
 	font-size:16px;
+}
+.assign-lbl{
+	margin:20px 0px;
+}
+.assign-lbl input[type=checkbox]{
+	float: left;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+input[type=radio]{
+	float: left;
+    margin-top: 5px;
+    margin-right: 5px;
 }
 /* Custom Bootsrap Class Starts*/
 .text-danger {
@@ -386,6 +438,11 @@ header .dropdown-menu>li>a:hover {
 .form-sidebar > ul > li {
     display: block;
 }
+.form-sidebar > ul > li.section > a {
+	background-color: #616161;
+    border-bottom: 0px;
+    margin-top: -1px;
+}
 .form-sidebar > ul > li > a {
     padding: 10px 13px;
     color: #fff;
@@ -412,6 +469,75 @@ header .dropdown-menu>li>a:hover {
 .form-sidebar > ul > .active > a {
     color: #fff;
     background-color: #161616;
+}
+.view .form-sidebar > ul > .active > a {
+     background-color: #7c9800;
+}
+.view img.thumbnail{
+	width:100%;
+	height:170px;
+}
+.view .features{
+	margin:15px 0px;
+}
+.view .features li{
+	margin-bottom:5px;	
+}
+.view .tab-content{
+	padding:5px 10px;
+}
+.view .contents .head{
+	font-size:16px;
+}
+.view .contents ol li{
+	margin-bottom:5px;
+}
+.question{
+	margin-bottom:10px;
+	position:relative;
+}
+.question ul{
+	list-style-type:upper-alpha;
+	margin-bottom:0px;
+}
+.question li{
+	padding-left: 20px;
+	display:inline-block;
+	width:100%;
+	position:relative;
+}
+.question li input{
+	float: left;
+    margin-left: -18px;
+    margin-top: 6px;
+}
+.question li textarea{
+	float:left;
+}
+.question .fa-times{
+	position: absolute;
+    right: -16px;
+    top: 2px;
+	cursor:pointer;	
+	color: #d64d22;
+}
+.question .q_remove{
+	position: absolute;
+    right: 0px;
+    top: 0px;
+	cursor:pointer;	
+	background-color: #d64d22;
+	color:#fff;
+	padding: 2px 10px 4px;
+    border-top-right-radius: 5px;
+
+}
+.qt ol>li .qname{
+	margin-bottom:10px;
+}
+.qt ul{
+	list-style:none;
+	padding-left:10px;
 }
 /* Course Ends */
 

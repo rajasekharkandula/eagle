@@ -84,6 +84,31 @@ class Admin extends CI_Controller {
 		$data['managers'] = $this->admin_model->get_user(array('type'=>'MANAGERS'));
 		$this->load->view('admin/manage/user',$data);
 	}
+		
+	function groups()
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'MANAGE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['groups'] = $this->admin_model->get_group(array('type'=>'ALL','user_id'=>$this->session->userdata('user_id')));		
+		$this->load->view('admin/manage/groups',$data);
+	}
+	function group($id=0)
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'MANAGE';
+		$data['id'] = $id;
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['group'] = $this->admin_model->get_group(array('type'=>'S','id'=>$id));
+		$data['group_users'] = $this->admin_model->get_group(array('type'=>'GROUP_USERS','id'=>$id));
+		//var_dump($data['group_users']);exit();
+		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL','id'=>$this->session->userdata('user_id')));
+		$this->load->view('admin/manage/group',$data);
+	}
 	
 	function course_categories()
 	{		
@@ -139,11 +164,13 @@ class Admin extends CI_Controller {
 		}
 		
 	}
-	function elearning($page='basic',$id=0)
+	function elearning($page='basic',$id=0,$sid=0,$cid=0)
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
 		$data['page'] = $page;
+		$data['section_id'] = $sid;
+		$data['chapter_id'] = $cid;
 		$data['id'] = $id;
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
@@ -159,13 +186,85 @@ class Admin extends CI_Controller {
 			$data['selected_trainers'] = $st;
 			$this->load->view('admin/elearning/basic',$data);
 		}elseif($page == 'content' && $course){
+			$data['sections'] = $this->admin_model->get_elearning(array('type'=>'SECTIONS','id'=>$id));
 			$this->load->view('admin/elearning/content',$data);
+		}elseif($page == 'chapters' && $course){
+			$data['chapters'] = $this->admin_model->get_elearning(array('type'=>'CHAPTERS','id'=>$id,'section_id'=>$sid));
+			$this->load->view('admin/elearning/chapters',$data);
+		}elseif($page == 'chapter' && $course){
+			$data['assessments'] = $this->admin_model->get_assessment(array('type'=>'L'));
+			$data['chapter'] = $this->admin_model->get_elearning(array('type'=>'CHAPTER','id'=>$id,'chapter_id'=>$cid));
+			$data['selected_asmts'] = $this->admin_model->get_elearning(array('type'=>'ASSESSMENTS','id'=>$id));
+			//var_dump($data['chapter']);exit();
+			$this->load->view('admin/elearning/chapter',$data);
 		}elseif($page == 'publish' && $course){
 			$this->load->view('admin/elearning/publish',$data);
 		}else{
 			echo 'Invalid URL';
 		}
 		
+	}
+	function assessments()
+	{		
+		$pageData['page'] = 'COURSE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['assessments'] = $this->admin_model->get_assessment(array('type'=>'L'));
+		//var_dump($data['assessments']);exit();
+		$this->load->view('admin/course/assessments',$data);
+	}
+	function assessment($page='basic',$id=0)
+	{		
+		$pageData['page'] = 'COURSE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['assessment'] = $assessment = $this->admin_model->get_assessment(array('type'=>'S','id'=>$id));
+		if($page == 'basic'){
+			$this->load->view('admin/course/assessment_basic',$data);
+		}elseif($page=='questions' && $assessment){
+			$data['questions'] = $this->admin_model->get_assessment(array('type'=>'QL','id'=>$id));
+			$data['options'] = $this->admin_model->get_assessment(array('type'=>'OL','id'=>$id));
+			$this->load->view('admin/course/assessment_questions',$data);
+		}else{
+			echo 'Invalid URL';
+		}
+	}
+	function course_users($id=0)
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'COURSE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['users'] = $this->admin_model->get_course(array('type'=>'USERS','id'=>$id));
+		$data['designations'] = $this->admin_model->get_course(array('type'=>'DESIGNATIONS','id'=>$id));
+		$data['groups'] = $this->admin_model->get_course(array('type'=>'GROUPS','id'=>$id));
+		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
+		//var_dump($data['designations']);exit();
+		if($course)
+			$this->load->view('admin/course/users',$data);
+		else
+			echo 'Invalid URL';
+	}
+	function course_assign($id=0)
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'COURSE';
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL'));
+		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
+		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL','id'=>$this->session->userdata('user_id')));
+		$data['groups'] = $this->admin_model->get_group(array('type'=>'ALL','user_id'=>$this->session->userdata('user_id')));
+		$data['designations'] = $this->admin_model->get_designation(array('type'=>'ALL'));
+		
+		if($course)
+			$this->load->view('admin/course/assign',$data);
+		else
+			echo 'Invalid URL';
 	}
 	public function upload_files($type){
 		$file = $_FILES['files'];
@@ -201,6 +300,46 @@ class Admin extends CI_Controller {
 	}
 	function ins_upd_elearning(){
 		echo json_encode($this->admin_model->ins_upd_elearning());
+	}
+	function ins_upd_group(){
+		echo json_encode($this->admin_model->ins_upd_group());
+	}
+	function assign_course(){
+		echo json_encode($this->admin_model->assign_course());
+	}
+	function ins_upd_assessment(){
+		echo json_encode($this->admin_model->ins_upd_assessment());
+	}
+	function submit_assessment(){
+		echo json_encode($this->admin_model->submit_assessment());
+	}
+	function get_question_template(){
+		$data['i'] = (int)$this->input->post('i') ? (int)$this->input->post('i') : 1;
+		$data['qtype'] = $this->input->post('qtype');
+		$data['marks'] = $this->input->post('marks');
+		echo $this->load->view('admin/course/assessment_question_template',$data,true);
+	}
+	function get_user(){
+		$data = array(
+			'type'=>$this->input->post('type'),
+			'id'=>$this->input->post('id'),
+			'group_id'=>$this->input->post('group_id')
+		);
+		echo json_encode($this->admin_model->get_user($data));
+	}
+	function get_group(){
+		$data = array(
+			'type'=>$this->input->post('type'),
+			'id'=>$this->input->post('id')
+		);
+		echo json_encode($this->admin_model->get_group($data));
+	}
+	function get_designation(){
+		$data = array(
+			'type'=>$this->input->post('type'),
+			'id'=>$this->input->post('id')
+		);
+		echo json_encode($this->admin_model->get_designation($data));
 	}
 	
 	

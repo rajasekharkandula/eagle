@@ -37,7 +37,7 @@
 		$('#publish_btn').attr("disabled",true);
 		$('#publish_btn').html('<i class="fa fa-refresh spin"></i> Please wait...');
 		$.ajax({
-			url:'<?php echo base_url('admin/ins_upd_course'); ?>',
+			url:'<?php echo base_url('admin/ins_upd_elearning'); ?>',
 			type:'POST',
 			data: {'id':<?php echo (int)$id; ?>,'type':'PUBLISH'},
 			dataType:'JSON'
