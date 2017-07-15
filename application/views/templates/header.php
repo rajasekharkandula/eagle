@@ -36,6 +36,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage</a>
 					<ul class="dropdown-menu">
 						<li><a href="<?php echo base_url();?>admin/users">Users</a></li>
+						<li><a href="<?php echo base_url();?>admin/groups">Groups</a></li>
 						<li><a href="<?php echo base_url();?>admin/designations">Designations</a></li>
 						<li><a href="<?php echo base_url();?>admin/skills">Skills</a></li>
 						<li><a href="<?php echo base_url();?>admin/departments">Departments</a></li>
@@ -47,6 +48,13 @@
 						<li><a href="<?php echo base_url();?>admin/course_categories">Course Category</a></li>
 						<li><a href="<?php echo base_url();?>admin/courses">Course List</a></li>
 						<li><a href="<?php echo base_url();?>admin/assessments">Assessments</a></li>
+					</ul>
+				</li>
+				<li class="dropdown <?php if($page == 'MYCOURSE')echo 'active'; ?>">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Courses</a>
+					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url('user/mycourses');?>">My Courses</a></li>
+						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>
 					</ul>
 				</li>
              </ul>
@@ -64,6 +72,55 @@
 					<ul class="dropdown-menu">
 						<li><a href="<?php echo base_url();?>manager/users">Team List</a></li>
 						<li><a href="<?php echo base_url();?>manager/courses">Courses</a></li>
+					</ul>
+				</li>
+				<li><a href="<?php echo base_url();?>admin/groups">Groups</a></li>
+				<li class="dropdown <?php if($page == 'MYCOURSE')echo 'active'; ?>">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Courses</a>
+					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url('user/mycourses');?>">My Courses</a></li>
+						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>
+					</ul>
+				</li>
+             </ul>
+		</div>
+    </nav>
+	<?php } ?>
+	
+	<?php if($this->session->userdata("role_name") == $this->config->item("user_role")){ ?>
+	<nav class="nav">
+		<div class="container">
+			<ul class="header-menu">				
+				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url('user');?>">Dashboard</a></li>
+				<li class="dropdown <?php if($page == 'COURSE')echo 'active'; ?>">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Courses</a>
+					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url('user/mycourses');?>">My Courses</a></li>
+						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>
+					</ul>
+				</li>
+             </ul>
+		</div>
+    </nav>
+	<?php } ?>
+	<?php if($this->session->userdata("role_name") == $this->config->item("trainer_role")){ ?>
+	<nav class="nav">
+		<div class="container">
+			<ul class="header-menu">				
+				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url('user');?>">Dashboard</a></li>
+				<li class="dropdown <?php if($page == 'COURSE')echo 'active'; ?>">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Course</a>
+					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url();?>admin/course_categories">Course Category</a></li>
+						<li><a href="<?php echo base_url();?>admin/courses">Course List</a></li>
+						<li><a href="<?php echo base_url();?>admin/assessments">Assessments</a></li>
+					</ul>
+				</li>
+				<li class="dropdown <?php if($page == 'COURSE')echo 'active'; ?>">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Courses</a>
+					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url('user/mycourses');?>">My Courses</a></li>
+						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>
 					</ul>
 				</li>
              </ul>

@@ -9,19 +9,15 @@
 				<div class="col-md-6">
 					<h2 class="page-title">List of Users</h2>
 				</div>
-				<div class="col-md-4">
-					<div class="page-actions">
-						<input type="text" placeholder="Search...">
-					</div>
-				</div>
+				<div class="col-md-4"></div>
 				<div class="col-md-2">
 					<div class="page-actions text-right">
 						<a href="<?php echo base_url('admin/user'); ?>" class="btn"><i class="fa fa-plus"></i> Add new user</a>
 					</div>
 				</div>
 			</div>
-			
-			<table class="table table-bordered">
+			<div class="box">
+			<table class="table table-bordered dataTable">
 				<thead>
 				  <tr>
 					<th>Employee ID</th>
@@ -49,7 +45,7 @@
 				  <?php } ?>
 				</tbody>
 			  </table>
-			
+			</div>
 		</div>
 	</div>
 	

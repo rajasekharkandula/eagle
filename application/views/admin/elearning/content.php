@@ -35,12 +35,15 @@
 							  </tr>
 							</thead>
 							<tbody>
+							  <?php $i=1;foreach($sections as $s){ ?>
 							  <tr>
-								<td>1</td>
-								<td>sgsdfg</td>
-								<td>dsgfsdf</td>
-								<td><a href="#" class="btn btn-sm"><i class="fa fa-eye"></i> View</a></td>
+								<td><?php echo $i; ?></td>
+								<td><?php echo $s->name; ?></td>
+								<td><?php echo $s->chapters; ?></td>
+								<td><a href="<?php echo base_url('admin/elearning/chapters/'.$id.'/'.$s->id); ?>" class="btn btn-sm"><i class="fa fa-eye"></i> View</a>
+								<a href="#" class="btn btn-sm edit_section" data-name="<?php echo $s->name; ?>" data-id="<?php echo $s->id; ?>"><i class="fa fa-pencil"></i> Edit</a></td>
 							  </tr>
+							  <?php $i++;} ?>
 							</tbody>
 						</table>
 						
@@ -51,14 +54,14 @@
 		</div>
 	</div>
 	<div id="section_modal" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
+	  <div class="modal-dialog" style="max-width:650px;">
 
 		<!-- Modal content-->
 		<div class="modal-content">
 		 <div class="modal-body">
 			<div class="row">
 			<div class="col-md-9">
-				<input type="text" id="section_id" placeholder="Enter section name">
+				<input type="text" id="section_name" placeholder="Enter section name">
 			</div>
 			<div class="col-md-3">
 				<button class="btn" type="button" id="submit_btn">Submit</button>
@@ -74,14 +77,21 @@
 	$(document).ready(function(){
 		
 	});
+	$('.edit_section').on('click',function(){
+		var id = $(this).data("id");
+		$('#submit_btn').data("id",id);
+		$("#section_name").val($(this).data("name"));
+		$("#section_modal").modal("show");
+	});
 	$('#submit_btn').on('click',function(){
 		$('#submit_btn').attr("disabled",true);
 		$('#submit_btn').html('<i class="fa fa-refresh spin"></i> Please wait...');
-		var section_id = $("#section_id").val();
+		var section_id = $(this).data("id");
+		var section_name = $("#section_name").val();
 		$.ajax({
 			url:'<?php echo base_url('admin/ins_upd_elearning'); ?>',
 			type:'POST',
-			data: {'type':'SECTION','id':<?php echo $id; ?>,'section_id':section_id},
+			data: {'type':'SECTION','id':<?php echo $id; ?>,'section_id':section_id,'section_name':section_name},
 			dataType:'JSON'
 		}).done(function(data){
 			if(data.status == 1){
