@@ -29,21 +29,14 @@
 						<?php if($reg_status){ ?>						
 						<a href="<?php echo base_url('home/course/'.$course->id); ?>" class="btn mt-10">Launch</a>
 						<?php }else{ ?>
-						<button class="btn mt-10" id="register_btn">Register</button>
+						<button class="btn mt-10" id="register_btn">Register Elearning</button>
 						<?php } ?>
 						<br>
-						<button class="btn mt-10 hide">Classroom</button>
+						<button class="btn mt-10 hide">Classroom Sessions</button>
 					</div>
 				</div>
 			</div>
-			<?php if(isset($elearning->promo_content_type)){ ?>
-			<div class="box mt-10">
-				<?php if($elearning->promo_content_type == 'Video'){ ?>
-					<div id="course_player"> Loading ...</div>
-				<?php }else{ ?>
-				<?php } ?>
-			</div>
-			<?php } ?>
+			
 			<div class="box mt-10" role="tabpanel">
 			  <ul class="nav nav-tabs" id="myTab" role="tablist">
 				<li class="nav-item">
@@ -61,10 +54,20 @@
 				<li class="nav-item">
 				  <a class="nav-link" id="elearning-tab" data-toggle="tab" href="#elearning" role="tab" aria-controls="elearning" aria-expanded="false">Contents</a>
 				</li>
+				<li class="nav-item">
+				  <a class="nav-link" id="sessions-tab" data-toggle="tab" href="#sessions" role="tab" aria-controls="sessions" aria-expanded="false">Sessions</a>
+				</li>
 			  </ul>
 			  <div class="tab-content" id="myTabContent">
 				<div role="tabpanel" class="tab-pane fade active show" id="overview" aria-labelledby="overview-tab" aria-expanded="true">
 				<?php echo $course->overview; ?>
+				<?php if(isset($course->promo_content_type)){ ?>
+					<?php if($course->promo_content_type == 'Video'){ ?>
+						<div id="course_player"> Loading ...</div>
+					<?php }else{ ?>
+						
+					<?php } ?>
+				<?php } ?>
 				</div>
 				<div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="faq-tab" aria-expanded="false">
 				<?php echo $course->faq; ?>
@@ -95,6 +98,29 @@
 				<?php } ?>
 				</div>
 				<?php } ?>
+				
+				<?php if(count($sessions) > 0){ ?>
+				<div class="tab-pane fade contents" id="sessions" role="tabpanel" aria-labelledby="sessions-tab" aria-expanded="false">
+				<table class="table table-bordered">
+					<thead>
+					  <tr>
+						<th>Start date</th>
+						<th>End date</th>
+						<th>Register</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <?php foreach($sessions as $s){ ?>
+					  <tr>
+						<td><?php echo date('d M y',strtotime($s->start_date)); ?></td>
+						<td><?php echo date('d M y',strtotime($s->end_date)); ?></td>
+						<td><button class="btn btn-sm">Register</button></td>
+					  </tr>
+					  <?php } ?>
+					</tbody>
+				</table>
+				</div>
+				<?php } ?>
 			  </div>
 			</div>
 			
@@ -109,10 +135,10 @@
 	<script type="text/javascript">
 
     $(document).ready(function(){
-		<?php if(isset($elearning->promo_content_type)){ ?>
-		<?php if($elearning->promo_content_type == 'Video' || $elearning->promo_content_type == 'Audio'){ ?>
+		<?php if(isset($course->promo_content_type)){ ?>
+		<?php if($course->promo_content_type == 'Video' || $course->promo_content_type == 'Audio'){ ?>
 		jwplayer("course_player").setup({
-			file: "<?php echo base_url($elearning->promo_content_file); ?>",
+			file: "<?php echo base_url($course->promo_content); ?>",
 			image: '<?php echo base_url('assets/images/backgrounds/bg.jpg');?>',
 			autostart: false,
 			width: "100%",

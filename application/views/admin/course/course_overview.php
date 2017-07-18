@@ -87,7 +87,7 @@
 		}).done(function(data){
 			if(data.status == 1){
 				$.notify({ message: data.message},{type: 'success'});
-				window.location='<?php echo base_url('admin/course/overview'); ?>/'+data.id;
+				window.location='<?php echo base_url('admin/course/content'); ?>/'+data.id;
 			}
 			else{
 				$('#submit_btn').removeAttr("disabled");

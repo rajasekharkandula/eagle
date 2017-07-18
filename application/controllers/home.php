@@ -62,9 +62,9 @@ class Home extends CI_Controller {
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
 		$data['reg_status'] = $this->admin_model->get_course(array('type'=>'REG_STATUS','id'=>$id,'user_id'=>$this->session->userdata('user_id')));
 		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
-		$data['elearning'] = $this->admin_model->get_elearning(array('type'=>'S','id'=>$id));
-		$data['sections'] = $this->admin_model->get_elearning(array('type'=>'SECTIONS_LIST','id'=>$id));
-		$data['chapters'] = $this->admin_model->get_elearning(array('type'=>'CHAPTERS_LIST','id'=>$id));
+		$data['sections'] = $this->admin_model->get_course(array('type'=>'SECTIONS_LIST','id'=>$id));
+		$data['chapters'] = $this->admin_model->get_course(array('type'=>'CHAPTERS_LIST','id'=>$id));
+		$data['sessions'] = $this->admin_model->get_course(array('type'=>'SESSIONS','id'=>$id));
 		if($course)
 			$this->load->view('home/course/view',$data);
 		else
@@ -78,11 +78,11 @@ class Home extends CI_Controller {
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
 		$reg_status = $this->admin_model->get_course(array('type'=>'REG_STATUS','id'=>$id,'user_id'=>$this->session->userdata('user_id')));
 		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
-		$data['chapter'] = $chapter = $this->admin_model->get_elearning(array('type'=>'CHAPTER_PLAY','id'=>$id,'chapter_id'=>$cid));
+		$data['chapter'] = $chapter = $this->admin_model->get_course(array('type'=>'CHAPTER_PLAY','id'=>$id,'chapter_id'=>$cid));
 		//var_dump($data['chapter']);exit();
-		$data['sections'] = $this->admin_model->get_elearning(array('type'=>'SECTIONS_LIST','id'=>$id));
-		$data['chapters'] = $this->admin_model->get_elearning(array('type'=>'CHAPTERS_LIST','id'=>$id));
-		$data['assessments'] = $this->admin_model->get_elearning(array('type'=>'ASMT_LP','id'=>$id));
+		$data['sections'] = $this->admin_model->get_course(array('type'=>'SECTIONS_LIST','id'=>$id));
+		$data['chapters'] = $this->admin_model->get_course(array('type'=>'CHAPTERS_LIST','id'=>$id));
+		$data['assessments'] = $this->admin_model->get_course(array('type'=>'ASMT_LP','id'=>$id));
 		$data['assessment'] = $this->admin_model->get_assessment(array('type'=>'S','id'=>$aid));
 		if($data['assessment']){
 			$data['questions'] = $this->admin_model->get_assessment(array('type'=>'QL','id'=>$aid));
