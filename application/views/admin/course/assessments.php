@@ -16,33 +16,34 @@
 					</div>
 				</div>
 			</div>			
-			
-			<table class="table table-bordered">
-				<thead>
-				  <tr>
-					<th>Name</th>
-					<th>Question type</th>
-					<th>Random</th>
-					<th>Mark type</th>
-					<th>No. of questions</th>
-					<th>Created Date</th>
-					<th>Actions</th>
-				  </tr>
-				</thead>
-				<tbody>
-				  <?php foreach($assessments as $a){ ?>
-				  <tr>
-					<td><?php echo $a->name; ?></td>
-					<td><?php echo $a->question_type; ?></td>
-					<td><?php echo $a->random; ?></td>
-					<td><?php echo $a->mark_type; ?></td>
-					<td><?php echo $a->questions; ?></td>
-					<td><?php echo $a->created_date; ?></td>
-					<td><a href="<?php echo base_url('admin/assessment/basic/'.$a->id); ?>" class="btn btn-sm">Edit</a></td>
-				  </tr>
-				  <?php } ?>
-				</tbody>
-			</table>
+			<div class="box" id="dlist">
+				<table class="table table-bordered dataTable">
+					<thead>
+					  <tr>
+						<th>Name</th>
+						<th>Question type</th>
+						<th>Random</th>
+						<th>Mark type</th>
+						<th>No. of questions</th>
+						<th>Created Date</th>
+						<th>Actions</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <?php foreach($assessments as $a){ ?>
+					  <tr>
+						<td><?php echo $a->name; ?></td>
+						<td><?php echo $a->question_type; ?></td>
+						<td><?php echo $a->random; ?></td>
+						<td><?php echo $a->mark_type; ?></td>
+						<td><?php echo $a->questions; ?></td>
+						<td><?php echo $a->created_date; ?></td>
+						<td><a href="<?php echo base_url('admin/assessment/basic/'.$a->id); ?>" class="btn btn-sm">Edit</a></td>
+					  </tr>
+					  <?php } ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	

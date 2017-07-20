@@ -109,6 +109,12 @@ class Admin_model extends CI_Model{
 				$return['message'] = 'Current password incorrect';
 			}
 		}
+		if($type == 'DELETE'){			
+			$this->db->query("DELETE from tbl_user WHERE id = $id");
+			
+			$return['status'] = true;
+			$return['message'] = 'User removed successfully';
+		}
 		
 		return $return;
 	}
@@ -151,7 +157,12 @@ class Admin_model extends CI_Model{
 			foreach($users as $u)
 			$this->db->query("INSERT INTO tbl_group_users (user_id, group_id) VALUES ($u, $id)");
 		}
-		
+		if($type == 'DELETE'){
+			$this->db->query("DELETE from tbl_group WHERE id = $id");
+			
+			$return['status'] = true;
+			$return['message'] = 'Group removed successfully';
+		}		
 		return $return;
 	}
 	
@@ -177,7 +188,6 @@ class Admin_model extends CI_Model{
 		if($type == 'USERS'){
 			return $this->db->query("SELECT u.first_name,u.last_name,u.email,u.id,u.uid,d.name as designation FROM tbl_user u INNER JOIN tbl_designation d ON d.id = u.designation WHERE d.id = $id")->result();
 		}
-		
 	}
 
 	function ins_upd_designation(){
@@ -196,6 +206,12 @@ class Admin_model extends CI_Model{
 			
 			$return['status'] = true;
 			$return['message'] = 'Designation updated successfully';
+		}
+		if($type == 'DELETE'){			
+			$this->db->query("DELETE from tbl_designation WHERE id = $id");
+			
+			$return['status'] = true;
+			$return['message'] = 'User removed successfully';
 		}
 		return $return;
 	}
@@ -229,6 +245,13 @@ class Admin_model extends CI_Model{
 			$return['status'] = true;
 			$return['message'] = 'Department updated successfully';
 		}
+		
+		if($type == 'DELETE'){			
+			$this->db->query("DELETE from tbl_department WHERE id = $id");
+			
+			$return['status'] = true;
+			$return['message'] = 'Department removed successfully';
+		}
 		return $return;
 	}
 	
@@ -259,6 +282,12 @@ class Admin_model extends CI_Model{
 			$this->db->query("UPDATE tbl_skill SET name = '$name', created_by = $this->user_id, created_date = NOW() WHERE id = $id");			
 			$return['status'] = true;
 			$return['message'] = 'Skill updated successfully';
+		}
+		if($type == 'DELETE'){			
+			$this->db->query("DELETE from tbl_skill WHERE id = $id");
+			
+			$return['status'] = true;
+			$return['message'] = 'Skill removed successfully';
 		}
 		return $return;
 	}

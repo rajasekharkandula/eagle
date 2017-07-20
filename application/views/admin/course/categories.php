@@ -10,9 +10,7 @@
 					<h2 class="page-title">List of Course Categories</h2>
 				</div>
 				<div class="col-md-4">
-					<div class="page-actions">
-						<input type="text" placeholder="Search...">
-					</div>
+					
 				</div>
 				<div class="col-md-2">
 					<div class="page-actions text-right">
@@ -20,8 +18,8 @@
 					</div>
 				</div>
 			</div>
-			
-			<table class="table table-bordered">
+		<div class="box" id="dlist">
+			<table class="table table-bordered dataTable">
 				<thead>
 				  <tr>
 					<th>Name</th>
@@ -39,7 +37,7 @@
 				  <?php } ?>
 				</tbody>
 			  </table>
-			
+		</div>
 		</div>
 	</div>
 	
