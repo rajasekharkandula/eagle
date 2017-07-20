@@ -13,40 +13,37 @@ class Manager extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'DASHBOARD';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['reports'] = $this->admin_model->get_dashboard(array('type'=>'MANAGER'));
 		$this->load->view('manager/dashboard',$data);
 	}
 	function users()
 	{		
 		$data = array();$pageData = array();
-		$pageData['page'] = 'TEAM';
+		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
 		$data['users'] = $this->admin_model->get_user(array('type'=>'MANAGER_TEAM','id'=>$this->session->userdata('user_id')));
 		$this->load->view('manager/users',$data);
 	}
-	function userview($id)
+	function trainers()
 	{		
 		$data = array();$pageData = array();
-		$pageData['page'] = 'TEAM';
+		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
-		$data['user'] = $this->admin_model->get_user(array('type'=>'S','id'=>$id));
-		$this->load->view('manager/userview',$data);
+		$data['users'] = $this->admin_model->get_user(array('type'=>'TRAINERS'));
+		//var_dump($data['users']);exit();
+		$this->load->view('manager/trainers',$data);
 	}
-	function courses(){
-		$pageData['page'] = 'TEAM';
-		$data['head'] = $this->load->view('templates/head',$pageData,true);
-		$data['header'] = $this->load->view('templates/header',$pageData,true);
-		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
-		$data['courses'] = $this->admin_model->get_course(array('type'=>'COURSES'));
-		$data['course_cat'] = $this->admin_model->get_course_category(array('type'=>'ALL'));
-		$this->load->view('manager/courses',$data);
-	}
+	
 	function course_search(){
 		$search=array(
 			'type'=>'SEARCH',

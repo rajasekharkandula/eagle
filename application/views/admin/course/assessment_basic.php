@@ -58,6 +58,9 @@
 								</div>
 							</div>
 							<div class="text-center mb-20">
+								<?php if(isset($assessment->id)){ ?>
+								<a href="<?php echo base_url('admin/assessment/questions/'.$assessment->id); ?>" class="btn">Questions</a>
+								<?php } ?>
 								<button class="btn" type="button" id="submit_btn">Submit</button>
 								<a href="<?php echo base_url('admin/assessments'); ?>" class="btn">Cancel</a>
 							</div>

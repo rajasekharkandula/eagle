@@ -6,14 +6,29 @@
 			</a>
 			<ul class="ls">
 				<li>
-					<a href="#">
+					<a href="#" data-toggle="dropdown">
 						<i class="fa fa-bell"></i>
-						<span class="count">0</span>
+						<span class="count hide">0</span>
 					</a>
+					<ul class="dropdown-menu dropdown-menu-right nt">
+						
+						<?php foreach($data['notifications'] as $n){ ?>
+						<li>
+							<img src="<?php echo base_url($n->image); ?>">
+							<div class="content">
+								<div><?php echo $n->subject; ?></div>
+								<div class="time"><i class="fa fa-clock-o"></i> <?php echo date('d M,y h:i A', strtotime($n->created_by)); ?></div>
+							</div>
+						</li>
+						<?php } ?>
+						<?php if(count($data['notifications']) == 0){ ?>
+						<li>No messages</li>
+						<?php } ?>
+					</ul>
 				</li>
 				<li class="dropdown">
 					<a href="#" data-toggle="dropdown">
-						<img src="<?php echo base_url('assets/images/user.jpg'); ?>">
+						<img src="<?php if(file_exists($this->session->userdata('profile_pic'))) echo base_url($this->session->userdata('profile_pic')); else echo base_url('assets/images/user.jpg'); ?>">
 						<i class="fa fa-caret-down"></i>
 					</a>
 					<ul class="dropdown-menu dropdown-menu-right">
@@ -21,7 +36,7 @@
 						<li><a href="<?php echo base_url('home/profile')?>"><i class="fa fa-user"></i> Profile</a></li>
 						<li><a href="<?php echo base_url('home/changepassword')?>"><i class="fa fa-user"></i> Change Password</a></li>
 						<li><a href="<?php echo base_url('home/logout'); ?>"><i class="fa fa-sign-out"></i> Logout</a></li>
-					<ul>
+					</ul>
 				</li>
 			</ul>
 		</div>
@@ -68,13 +83,14 @@
 			<ul class="header-menu">				
 				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url();?>">Dashboard</a></li>
                 <li class="dropdown <?php if($page == 'MANAGE')echo 'active'; ?>">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Team</a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage</a>
 					<ul class="dropdown-menu">
-						<li><a href="<?php echo base_url();?>manager/users">Team List</a></li>
-						<li><a href="<?php echo base_url();?>manager/courses">Courses</a></li>
+						<li><a href="<?php echo base_url();?>manager/users">My Team</a></li>
+						<li><a href="<?php echo base_url();?>manager/trainers">Trainers</a></li>
+						<li><a href="<?php echo base_url();?>admin/courses">Courses</a></li>
+						<li><a href="<?php echo base_url();?>admin/groups">Groups</a></li>
 					</ul>
 				</li>
-				<li><a href="<?php echo base_url();?>admin/groups">Groups</a></li>
 				<li class="dropdown <?php if($page == 'MYCOURSE')echo 'active'; ?>">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Courses</a>
 					<ul class="dropdown-menu">
@@ -107,7 +123,7 @@
 	<nav class="nav">
 		<div class="container">
 			<ul class="header-menu">				
-				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url('user');?>">Dashboard</a></li>
+				<li class="<?php if($page == 'DASHBOARD')echo 'active'; ?>"><a href="<?php echo base_url('trainer');?>">Dashboard</a></li>
 				<li class="dropdown <?php if($page == 'COURSE')echo 'active'; ?>">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Course</a>
 					<ul class="dropdown-menu">

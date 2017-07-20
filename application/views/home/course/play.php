@@ -28,12 +28,12 @@
 							elseif($li->content_type == 'Document'){ $class = 'fa-file-text-o '; }
 							elseif($li->content_type == 'Image'){ $class = 'fa-picture-o '; }
 							?>
-							<li <?php if($chapter->id == $li->id)echo 'class="active"'; ?>>
+							<li <?php if(!isset($assessment->id)){if($chapter->id == $li->id)echo 'class="active"';} ?>>
 								<a href="<?php echo base_url("home/course/".$course->id.'/'.$li->id); ?>"><i class="fa <?php echo $class; ?>"></i> <?php echo $li->name; ?></a>
 							</li>
 							
 							<?php foreach($assessments as $a){ if($a->chapter_id == $li->id){ ?>
-							<li <?php if($chapter->id == $li->id)echo 'class="active"'; ?>>
+							<li <?php if(isset($assessment->id)){if($assessment->id == $a->id)echo 'class="active"';} ?>>
 								<a href="<?php echo base_url("home/course/".$course->id.'/'.$li->id.'/'.$a->id); ?>"><i class="fa fa-question"></i> <?php echo $a->name; ?></a>
 							</li>
 							<?php } } ?>
@@ -87,10 +87,10 @@
 	<?php if($assessment){ ?>
 <!-- Modal -->
 <div id="confirm_modal" class="modal fade qtm" role="dialog" data-keyboard="false" data-backdrop="static">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="width:400px; top: 20%;">
 
     <!-- Modal content-->
-    <div class="modal-content">
+    <div class="modal-content box">
       <div class="modal-body">
         <p>Are you sure want to submit the assessment?</p>     
         <p>Total Questions : <?php echo count($questions); ?></p>     
@@ -173,7 +173,7 @@
 		$.ajax({
 			url:'<?php echo base_url(); ?>admin/submit_assessment',
 			type:'POST',
-			data: {'answers':answers,'assessment_id':'<?php echo $assessment->id; ?>'},
+			data: {'answers':answers,'assessment_id':'<?php echo $assessment->id; ?>','course_id':'<?php echo $course->id; ?>'},
 			dataType:'JSON'
 		}).done(function(data){
 			window.location.reload();

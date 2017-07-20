@@ -391,5 +391,7 @@ $config['content_type'] = array('Image', 'Audio', 'Video', 'SCORM', 'Document', 
 
 $config['default_user_img'] = 'assets/images/user.jpg'; //Default user image
 
+$config['elearning_duration'] = 60; //Elearning duration to complete (Days)
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
