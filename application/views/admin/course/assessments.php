@@ -36,7 +36,7 @@
 					<td><?php echo $a->question_type; ?></td>
 					<td><?php echo $a->random; ?></td>
 					<td><?php echo $a->mark_type; ?></td>
-					<td><?php echo $a->questions; ?></td>
+					<td><?php echo $a->questions; ?> <a class="btn btn-sm" href="<?php echo base_url('admin/assessment/questions/'.$a->id); ?>">View</a></td>
 					<td><?php echo $a->created_date; ?></td>
 					<td><a href="<?php echo base_url('admin/assessment/basic/'.$a->id); ?>" class="btn btn-sm">Edit</a></td>
 				  </tr>

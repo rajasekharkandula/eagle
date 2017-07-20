@@ -15,12 +15,13 @@ class Home extends CI_Controller {
 			if($this->session->userdata("role_name") == $this->config->item("manager_role"))
 				redirect('manager');
 			if($this->session->userdata("role_name") == $this->config->item("trainer_role"))
-				redirect('admin');
+				redirect('trainer');
 			if($this->session->userdata("role_name") == $this->config->item("user_role"))
 				redirect('user');
 		}
 		
 		$data = array();$pageData = array();
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -34,18 +35,30 @@ class Home extends CI_Controller {
 		redirect(base_url());
 	}
 
-	function profile(){
+	function profile($id=0){
 		$data = array();$pageData = array();
 		$pageData['page'] = '';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
-		$data['user'] = $this->admin_model->get_user(array('type'=>'S','id'=>$this->session->userdata('user_id')));
-		$this->load->view('home/profile',$data);
+		if($id == 0)$id = $this->session->userdata('user_id');
+		$data['user'] = $user = $this->admin_model->get_user(array('type'=>'S','id'=>$id));
+		if($user){
+			$data['courses'] = $this->admin_model->get_course(array('type'=>'USERALL','user_id'=>$id));
+			$data['ongoing'] = $this->admin_model->get_course(array('type'=>'ONGOING','user_id'=>$id));
+			$data['completed'] = $this->admin_model->get_course(array('type'=>'COMPLETED','user_id'=>$id));
+			$data['assessments'] = $this->admin_model->get_assessment(array('type'=>'USERALL','user_id'=>$id));
+			//var_dump($data['assessments']);exit();
+			$this->load->view('home/profile',$data);
+		}else{
+			echo 'Invalid URL';
+		}
 	}
 	function changepassword(){
 		$data = array();$pageData = array();
 		$pageData['page'] = '';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -57,10 +70,14 @@ class Home extends CI_Controller {
 	function course_view($id=0){
 		
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
-		$data['reg_status'] = $this->admin_model->get_course(array('type'=>'REG_STATUS','id'=>$id,'user_id'=>$this->session->userdata('user_id')));
+		$reg_sessions = $this->admin_model->get_course(array('type'=>'REG_STATUS','id'=>$id,'user_id'=>$this->session->userdata('user_id')));
+		$rs = array();foreach($reg_sessions as $s)array_push($rs,$s->session_id);
+		$data['reg_sessions'] = $rs;
+		
 		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
 		$data['sections'] = $this->admin_model->get_course(array('type'=>'SECTIONS_LIST','id'=>$id));
 		$data['chapters'] = $this->admin_model->get_course(array('type'=>'CHAPTERS_LIST','id'=>$id));
@@ -73,6 +90,7 @@ class Home extends CI_Controller {
 	function course($id=0,$cid=0,$aid=0){
 		
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);

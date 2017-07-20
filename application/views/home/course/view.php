@@ -26,10 +26,10 @@
 					</div>
 					<div class="col-md-3 text-center">
 						<br>
-						<?php if($reg_status){ ?>						
+						<?php if(in_array(-1,$reg_sessions)){ ?>					
 						<a href="<?php echo base_url('home/course/'.$course->id); ?>" class="btn mt-10">Launch</a>
 						<?php }else{ ?>
-						<button class="btn mt-10" id="register_btn">Register Elearning</button>
+						<button class="btn mt-10 register" id="register_btn" data-courseid="<?php echo $course->id; ?>" data-type="Elearning">Register Elearning</button>
 						<?php } ?>
 						<br>
 						<button class="btn mt-10 hide">Classroom Sessions</button>
@@ -114,7 +114,13 @@
 					  <tr>
 						<td><?php echo date('d M y',strtotime($s->start_date)); ?></td>
 						<td><?php echo date('d M y',strtotime($s->end_date)); ?></td>
-						<td><button class="btn btn-sm">Register</button></td>
+						<td>
+							<?php if(!in_array($s->id,$reg_sessions)){ ?>
+							<button class="btn btn-sm register" data-courseid="<?php echo $s->course_id; ?>" data-sessionid="<?php echo $s->id; ?>" data-type="Classroom">Register</button>
+							<?php }else{ ?>
+							<button class="btn btn-sm" disabled>Registered</button>
+							<?php } ?>
+						</td>
 					  </tr>
 					  <?php } ?>
 					</tbody>
@@ -149,7 +155,30 @@
 		});
 		<?php } ?>
 		<?php } ?>
-		
+	});
+	$(".register").on("click",function(){
+		var obj = $(this);
+		obj.attr("disabled",true);
+		obj.html('Please wait...');
+		var course_id = obj.data('courseid');
+		var session_id = obj.data('sessionid');
+		var course_type = obj.data('type');
+		$.ajax({
+			url:'<?php echo base_url('admin/course_registration'); ?>',
+			type:'POST',
+			data: {'type':'REGISTER','course_id':course_id,'session_id':session_id,'course_type':course_type},
+			dataType:'JSON'
+		}).done(function(data){
+			if(data.status == 1){
+				$.notify({ message: data.message},{type: 'success'});
+				window.location.reload();
+			}
+			else{
+				obj.removeAttr("disabled");
+				obj.html('Register');
+				$.notify({ message: data.message},{type: 'danger'});
+			}
+		});
 	});	
 	</script>
 </body>

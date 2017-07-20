@@ -12,9 +12,11 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'DASHBOARD';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['reports'] = $this->admin_model->get_dashboard(array('type'=>'HR'));
 		$this->load->view('admin/dashboard',$data);
 	}
 	
@@ -22,6 +24,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -33,6 +36,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -44,6 +48,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -55,6 +60,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -66,6 +72,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -76,6 +83,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -87,6 +95,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -98,6 +107,7 @@ class Admin extends CI_Controller {
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
 		$data['id'] = $id;
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -112,6 +122,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -123,6 +134,7 @@ class Admin extends CI_Controller {
 		$data = array();$pageData = array();
 		$pageData['page'] = 'MANAGE';
 		$data['id'] = $id;
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -137,6 +149,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -147,6 +160,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -158,11 +172,19 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
-		$data['courses'] = $this->admin_model->get_course(array('type'=>'ALL'));
-		$this->load->view('admin/course/courses',$data);
+		if($this->session->userdata('role_name') == $this->config->item('manager_role')){
+			$data['courses'] = $this->admin_model->get_course(array('type'=>'COURSES'));
+			$data['course_cat'] = $this->admin_model->get_course_category(array('type'=>'ALL'));
+			$this->load->view('manager/courses',$data);
+		}else{
+			$data['courses'] = $this->admin_model->get_course(array('type'=>'ALL'));
+			$this->load->view('admin/course/courses',$data);
+		}
+		
 	}
 	function course($page='basic',$id=0,$sid=0,$cid=0)
 	{		
@@ -172,6 +194,7 @@ class Admin extends CI_Controller {
 		$data['section_id'] = $sid;
 		$data['chapter_id'] = $cid;
 		$data['id'] = $id;
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -211,6 +234,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -226,6 +250,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -240,6 +265,7 @@ class Admin extends CI_Controller {
 	function assessments()
 	{		
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -250,6 +276,7 @@ class Admin extends CI_Controller {
 	function assessment($page='basic',$id=0)
 	{		
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -268,6 +295,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -285,6 +313,7 @@ class Admin extends CI_Controller {
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
@@ -345,6 +374,9 @@ class Admin extends CI_Controller {
 	}
 	function submit_assessment(){
 		echo json_encode($this->admin_model->submit_assessment());
+	}
+	function course_registration(){
+		echo json_encode($this->admin_model->course_registration());
 	}
 	function get_question_template(){
 		$data['i'] = (int)$this->input->post('i') ? (int)$this->input->post('i') : 1;

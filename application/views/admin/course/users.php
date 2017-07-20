@@ -31,7 +31,8 @@
 			  </ul>
 			  <div class="tab-content" id="myTabContent">
 				<div role="tabpanel" class="tab-pane fade active show" id="users" aria-labelledby="users-tab" aria-expanded="true">
-					<table class="table table-bordered">
+					<div class="box">
+					<table class="table table-bordered dataTable">
 						<thead>
 						  <tr>
 							<th>Employee ID</th>
@@ -40,7 +41,7 @@
 							<th>Designation</th>
 							<th>Course Type</th>
 							<th>Assign Type</th>
-							<th>Register Status</th>
+							<th>Status</th>
 						  </tr>
 						</thead>
 						<tbody>
@@ -52,12 +53,12 @@
 							<td><?php echo $u->designation; ?></td>
 							<td><?php echo $u->course_type; ?></td>
 							<td><?php echo $u->register_type; ?></td>
-							<td><?php echo $u->register_status; ?></td>
+							<td><?php echo $u->status; ?></td>
 						  </tr>
 						  <?php } ?>
 						</tbody>
 					</table>
-				 
+					</div>
 				</div>
 				<div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab" aria-expanded="false">
 					<table class="table table-bordered">
@@ -73,7 +74,7 @@
 						  <tr>
 							<td><?php echo $g->name; ?></td>
 							<td><?php echo $g->users; ?></td>
-							<td><button class="btn">Remove</button></td>
+							<td><button class="btn btn-sm remove" data-groupid="<?php echo $g->id; ?>" data-courseid="<?php echo $course->id; ?>" data-type="GROUP">Remove</button></td>
 						  </tr>
 						  <?php } ?>
 						</tbody>
@@ -93,7 +94,7 @@
 						  <tr>
 							<td><?php echo $d->name; ?></td>
 							<td><?php echo $d->users; ?></td>
-							<td><button class="btn btn-sm">Remove</button></td>
+							<td><button class="btn btn-sm remove" data-groupid="<?php echo $g->id; ?>" data-courseid="<?php echo $course->id; ?>" data-type="DESIGNATION">Remove</button></td>
 						  </tr>
 						  <?php } ?>
 						</tbody>

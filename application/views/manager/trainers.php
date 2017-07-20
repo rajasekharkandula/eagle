@@ -7,7 +7,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
-					<h2 class="page-title">List of Users</h2>
+					<h2 class="page-title">List of Trainers</h2>
 				</div>
 			</div>
 			<div class="box">
@@ -19,7 +19,6 @@
 					<th>Username</th>
 					<th>Email</th>
 					<th>Designation</th>
-					<th>Actions</th>
 				  </tr>
 				</thead>
 				<tbody>
@@ -30,7 +29,6 @@
 					<td><?php echo $u->username; ?></td>
 					<td><?php echo $u->email; ?></td>
 					<td><?php echo $u->designation; ?></td>
-					<td><a href="<?php echo base_url("home/profile/$u->id"); ?>" class="btn btn-sm"><i class="fa fa-pencil-square-o"></i> View</a></td>
 				  </tr>
 				  <?php } ?>
 				</tbody>

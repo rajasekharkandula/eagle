@@ -23,6 +23,7 @@ class Home_model extends CI_Model{
 					'user_id' => $user->id,
 					'user_name' => $user->first_name.' '.$user->last_name,
 					'email' => $user->email,
+					'profile_pic' => $user->image,
 					'entity_id' => $user->entity_id,
 					'role_id' => $user->role_id,
 					'role_name' => $role->name

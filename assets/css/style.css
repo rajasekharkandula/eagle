@@ -132,6 +132,9 @@ img{
 .modal-dialog {
     max-width: 70%;
 }
+.modal-content.box{
+	background: rgba(62, 62, 62, 0.95);
+}
 .nav-tabs {
     border: 1px solid #3e3e3e;
     margin-bottom: 10px;
@@ -170,6 +173,14 @@ input[type=radio]{
 	float: left;
     margin-top: 5px;
     margin-right: 5px;
+}
+.rcount{
+	position: absolute;
+    top: 48%;
+    font-size: 22px;
+    left: 0px;
+    text-align: center;
+    right: 0px;
 }
 /* Custom Bootsrap Class Starts*/
 .text-danger {
@@ -336,6 +347,39 @@ header .dropdown-menu>li>a:hover {
     border-bottom: 1px solid #444;
     font-weight: bold;
 }
+header ul.nt{
+	max-width:350px;
+	padding: 0px;
+	border: 1px solid #848383;
+}
+header ul.nt li{
+	padding: 5px;
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px solid #3a3a3a;
+    margin-bottom: -5px;
+	color: #fff;
+}
+header ul.nt li img{
+	width: 50px;
+    height: 50px;
+    float: left;
+    margin-right: 8px;
+	border-radius:5px;
+} 
+header ul.nt .content .time{
+	font-size: 11px;
+    margin-top: 2px;
+	color: #ddd;
+}
+header ul.nt .content{
+	float: left;
+    width: 280px;
+    line-height: 16px;
+    font-size: 14px;
+    color: #fff;
+    margin-top: -3px;
+}
 /* Header Ends */
 
 .page-title{
@@ -399,7 +443,8 @@ header .dropdown-menu>li>a:hover {
 /* Course Starts */
 .c-box{
 	background: rgb(62, 62, 62);
-	border: 1px solid #101417;
+	/* border: 1px solid #101417; */
+	border: 1px solid #4a4a4a;
 	padding: 10px;
 	border-radius: 5px;
 	color: #fff;
@@ -432,7 +477,30 @@ header .dropdown-menu>li>a:hover {
     padding: 1px 10px 2px;
     border: 1px solid #5d5d5d;
 }
-
+.box.sidebar ul{
+	list-style-type:none;
+	padding:0px;
+}
+.box.sidebar{
+	padding:0px;
+}
+.box.sidebar li:first-child{
+	font-size: 18px;
+    border-bottom: 1px solid #3a3a3a;
+    background-color: #3a3a3a;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.box.sidebar li{
+	padding:5px 10px;
+}
+.box.sidebar li input{
+	height: 15px;
+    width: 15px;
+    float: left;
+    margin-top: 4px;
+    margin-right: 5px;
+}
 .sb .dropdown-menu {
     background-color: #202325;
 	padding:5px 0px;
