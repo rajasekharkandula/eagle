@@ -8,6 +8,10 @@ class Admin extends CI_Controller {
 		if($this->session->userdata("logged_in") == false)
 			redirect(base_url());
 	}
+	function download_excel(){
+		echo $this->admin_model->download_excel();
+	}
+	
 	function index()
 	{		
 		$data = array();$pageData = array();
@@ -114,6 +118,7 @@ class Admin extends CI_Controller {
 		$data['user'] = $this->admin_model->get_user(array('type'=>'S','id'=>$id));
 		$data['roles'] = $this->admin_model->get_role(array('type'=>'ALL'));
 		$data['designations'] = $this->admin_model->get_designation(array('type'=>'ALL'));
+		$data['departments'] = $this->admin_model->get_department(array('type'=>'ALL'));
 		$data['managers'] = $this->admin_model->get_user(array('type'=>'MANAGERS'));
 		$this->load->view('admin/manage/user',$data);
 	}
@@ -168,7 +173,7 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/course/category',$data);
 	}
 	
-	function courses()
+	function courses($status='')
 	{		
 		$data = array();$pageData = array();
 		$pageData['page'] = 'COURSE';
@@ -181,7 +186,7 @@ class Admin extends CI_Controller {
 			$data['course_cat'] = $this->admin_model->get_course_category(array('type'=>'ALL'));
 			$this->load->view('manager/courses',$data);
 		}else{
-			$data['courses'] = $this->admin_model->get_course(array('type'=>'ALL'));
+			$data['courses'] = $this->admin_model->get_course(array('type'=>'ALL','status'=>$status));
 			$this->load->view('admin/course/courses',$data);
 		}
 		
@@ -223,6 +228,10 @@ class Admin extends CI_Controller {
 			$data['selected_asmts'] = $sa;
 			//var_dump($data['selected_asmts']);exit();
 			$this->load->view('admin/course/course_chapter',$data);
+		}elseif($page == 'assessment' && $course){
+			$data['assessments'] = $this->admin_model->get_assessment(array('type'=>'L'));
+			$data['assessment'] = $this->admin_model->get_course(array('type'=>'COURSE_ASMT','id'=>$id));
+			$this->load->view('admin/course/course_assessment',$data);
 		}elseif($page == 'publish' && $course){
 			$this->load->view('admin/course/course_publish',$data);
 		}else{
@@ -317,9 +326,8 @@ class Admin extends CI_Controller {
 		$data['head'] = $this->load->view('templates/head',$pageData,true);
 		$data['header'] = $this->load->view('templates/header',$pageData,true);
 		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
-		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL'));
 		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
-		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL','id'=>$this->session->userdata('user_id')));
+		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL_C','id'=>$this->session->userdata('user_id')));
 		$data['groups'] = $this->admin_model->get_group(array('type'=>'ALL','user_id'=>$this->session->userdata('user_id')));
 		$data['designations'] = $this->admin_model->get_designation(array('type'=>'ALL'));
 		
@@ -327,6 +335,19 @@ class Admin extends CI_Controller {
 			$this->load->view('admin/course/assign',$data);
 		else
 			echo 'Invalid URL';
+	}
+	function send_notification()
+	{		
+		$data = array();$pageData = array();
+		$pageData['page'] = 'MANAGE';
+		$pageData['data'] = $this->admin_model->get_header();
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['users'] = $this->admin_model->get_user(array('type'=>'ALL'));
+		$data['groups'] = $this->admin_model->get_group(array('type'=>'ALL','user_id'=>$this->session->userdata('user_id')));
+		$data['designations'] = $this->admin_model->get_designation(array('type'=>'ALL'));
+		$this->load->view('admin/manage/send_notification',$data);
 	}
 	public function upload_files($type){
 		$file = $_FILES['files'];
@@ -377,6 +398,17 @@ class Admin extends CI_Controller {
 	}
 	function course_registration(){
 		echo json_encode($this->admin_model->course_registration());
+	}
+	function ins_upd_notification(){
+		$data = array(
+			'type'=>$this->input->post('type'),
+			'assign_type'=>$this->input->post('assign_type'),
+			'group_id'=>$this->input->post('group_id'),
+			'designation_id'=>$this->input->post('designation_id'),
+			'subject'=>$this->input->post('subject'),
+			'content'=>$this->input->post('content')
+		);
+		echo json_encode($this->admin_model->ins_upd_notification($data));
 	}
 	function get_question_template(){
 		$data['i'] = (int)$this->input->post('i') ? (int)$this->input->post('i') : 1;

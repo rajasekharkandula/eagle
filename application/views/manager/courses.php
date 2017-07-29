@@ -32,7 +32,7 @@
 								<?php foreach($courses as $c){ ?>
 								<div class="col-md-4">
 									<div class="c-box">
-										<a href="<?php echo base_url('admin/course_view/'.$c->id); ?>">
+										<a href="<?php echo base_url('home/course_view/'.$c->id); ?>">
 											<img src="<?php echo base_url($c->image); ?>">
 											<div class="title"><?php echo $c->name; ?></div>
 											<div class="sub-title"><?php echo $c->category_name; ?></div>
@@ -83,12 +83,17 @@
 					for(var i=0;i<data.length;i++){				
 						coursehtml+='<div class="col-md-4">'+
 							'<div class="c-box">'+
-								'<a href="<?php echo base_url(); ?>manager/coursview/'+data[i]['id']+'">'+
+								'<a href="<?php echo base_url(); ?>home/course_view/'+data[i]['id']+'">'+
 									'<img src="<?php echo base_url(); ?>'+data[i]['image']+'">'+
 									'<div class="title">'+data[i]['name']+'</div>'+
 									'<div class="sub-title">'+data[i]['category_name']+'</div>'+
 								'</a>'+
-								
+								'<div class="sb">'+
+									'<a href="<?php echo base_url('admin/course_assign'); ?>/'+data[i]['id']+'">Assign</a>'+
+								'</div>'+
+								'<div class="sb">'+
+									'<a href="<?php echo base_url('admin/course_users'); ?>/'+data[i]['id']+'">Users</a>'+
+								'</div>'+
 							'</div>'+
 						'</div>';
 					}

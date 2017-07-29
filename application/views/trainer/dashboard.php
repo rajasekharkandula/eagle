@@ -14,19 +14,19 @@
 				</a>
 			</div>
 			<div class="col-md-3 col-sm-4 col-xs-12">
-				<a href="<?php echo base_url('admin/courses'); ?>">
+				<a href="<?php echo base_url('admin/courses/published'); ?>">
 				<div id="report2" style="height: 200px; width: 100%;"></div>
 				<span class="rcount"><?php echo $reports->published; ?></span>
 				</a>
 			</div>
 			<div class="col-md-3 col-sm-4 col-xs-12">
-				<a href="<?php echo base_url('home/profile#completed'); ?>">
+				<a href="<?php echo base_url('admin/courses'); ?>">
 				<div id="report3" style="height: 200px; width: 100%;"></div>
 				<span class="rcount"><?php echo $reports->registered; ?></span>
 				</a>
 			</div>
 			<div class="col-md-3 col-sm-4 col-xs-12">
-				<a href="<?php echo base_url('home/profile#assessments'); ?>">
+				<a href="<?php echo base_url('admin/assessments'); ?>">
 				<div id="report4" style="height: 200px; width: 100%;"></div>
 				<span class="rcount"><?php echo $reports->assessments; ?></span>
 				</a>

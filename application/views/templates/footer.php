@@ -18,3 +18,25 @@
 <script src="<?php echo base_url('assets/js/xu-validation.js'); ?>"></script>
 
 <script src="<?php echo base_url('assets/js/scripts.js'); ?>" type="text/javascript"></script>
+
+<script>
+$(".download").click(function(){
+	var obj = $(this);
+	var type = obj.data('type');
+	var course_id = obj.data('courseid');
+	obj.html('Please wait...');
+	$.ajax({
+		url:'<?php echo base_url('admin/download_excel'); ?>',
+		type:'POST',
+		data: {'type':type,'course_id':course_id},
+		dataType:'TEXT'
+	}).done(function(data){
+		if(data != 0){
+			window.location=data;
+		}else{			
+			$.notify({ message: 'Error in downloading, Please try again later'},{type: 'danger'});
+		}
+		obj.html('Download');
+	});
+});
+</script>

@@ -75,6 +75,8 @@
 						  <tr>
 							<th>Name</th>
 							<th>Course Type</th>
+							<th>Attempts</th>
+							<th>Assessment Score</th>
 							<th>Status</th>
 						  </tr>
 						</thead>
@@ -83,7 +85,9 @@
 						  <tr>
 							<td><?php echo $c->name; ?></td>
 							<td><?php echo $c->course_type; ?></td>
-							<td><?php echo $c->status; ?></td>
+							<td><?php echo $c->attempts; ?></td>
+							<td><?php echo $c->marks; ?></td>
+							<td><?php if($c->marks)echo 'Pass';else echo $c->status; ?></td>
 						  </tr>
 						  <?php } ?>
 						</tbody>

@@ -57,6 +57,17 @@
 								</div>
 							</div>
 							<div class="row mb-15">
+								<label class="col-md-3">Department <span>*</span></label>
+								<div class="col-md-8">
+									<select class="select2" data-placeholder="Select department" name="department" va_req="true">
+										<option></option>
+										<?php foreach($departments as $d){ ?>
+										<option value="<?php echo $d->id; ?>" <?php if(isset($user->department_id))if($user->department_id == $d->id)echo 'selected'; ?>><?php echo $d->name; ?></option>	
+										<?php } ?>
+									</select>
+								</div>
+							</div>
+							<div class="row mb-15">
 								<label class="col-md-3">Email <span>*</span></label>
 								<div class="col-md-8">
 									<input type="text" va_req="true" name="email" placeholder="Enter email" value="<?php if(isset($user->email))echo $user->email; ?>">
@@ -85,7 +96,7 @@
 									<select class="select2" data-placeholder="Select designation" name="designation" va_req="true">
 										<option></option>
 										<?php foreach($designations as $d){ ?>
-										<option value="<?php echo $d->id; ?>" <?php if(isset($user->designation))if($user->designation == $d->id)echo 'selected'; ?>><?php echo $d->name; ?></option>	
+										<option value="<?php echo $d->id; ?>" <?php if(isset($user->designation_id))if($user->designation_id == $d->id)echo 'selected'; ?>><?php echo $d->name; ?></option>	
 										<?php } ?>
 									</select>
 								</div>

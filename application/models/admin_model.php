@@ -22,8 +22,15 @@ class Admin_model extends CI_Model{
 		if($type == 'ALL'){
 			return $this->db->query("SELECT u.*,r.name as role_name,d.name as designation FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id INNER JOIN tbl_designation d ON d.id = u.designation")->result();
 		}
+		if($type == 'ALL_C'){
+			if($this->session->userdata('role_name') == $this->config->item('admin_role')){
+				return $this->db->query("SELECT u.*,r.name as role_name,d.name as designation FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id INNER JOIN tbl_designation d ON d.id = u.designation")->result();
+			}else{
+				return $this->db->query("SELECT u.*,r.name as role_name,d.name as designation FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id INNER JOIN tbl_designation d ON d.id = u.designation WHERE manager_id = $id")->result();
+			}
+		}
 		if($type == 'S'){
-			return $this->db->query("SELECT u.*, (select name from tbl_designation where id =u.designation limit 1 )as designation FROM tbl_user u WHERE u.id = $id")->row();
+			return $this->db->query("SELECT u.*, (select name from tbl_designation where id =u.designation limit 1 )as designation,u.designation AS designation_id FROM tbl_user u WHERE u.id = $id")->row();
 		}
 		if($type == 'MANAGERS'){
 			return $this->db->query("SELECT * FROM tbl_user u INNER JOIN tbl_role r ON r.id = u.role_id WHERE r.name = '".$this->config->item('manager_role')."'")->result();
@@ -54,6 +61,7 @@ class Admin_model extends CI_Model{
 		$user_role = $this->input->post('user_role');
 		$designation = (int)$this->input->post('designation');
 		$manager_id = (int)$this->input->post('manager_id');
+		$department_id = (int)$this->input->post('department');
 		
 		$user_image = file_exists($user_image) ? $user_image : $this->config->item('default_user_img');
 		
@@ -80,7 +88,7 @@ class Admin_model extends CI_Model{
 					$return['message'] = 'Employee ID already exists';
 				return $return;
 			}
-			$this->db->query("INSERT INTO tbl_user (entity_id, uid, first_name, last_name, username, email, password, image, role_id, designation, manager_id, created_by, updated_by, created_date, updated_date, status) VALUES ($this->entity_id, '$uid', '$first_name', '$last_name', '$username', '$email', '$password', '$user_image', $user_role, $designation, $manager_id, $this->user_id, $this->user_id, NOW(), NOW(), 'Active'); ");
+			$this->db->query("INSERT INTO tbl_user (entity_id, uid, first_name, last_name,department_id, username, email, password, image, role_id, designation, manager_id, created_by, updated_by, created_date, updated_date, status) VALUES ($this->entity_id, '$uid', '$first_name', '$last_name', $department_id, '$username', '$email', '$password', '$user_image', $user_role, $designation, $manager_id, $this->user_id, $this->user_id, NOW(), NOW(), 'Active'); ");
 			$return['status'] = true;
 			$return['message'] = 'User created successfully';
 		}
@@ -95,7 +103,7 @@ class Admin_model extends CI_Model{
 					$return['message'] = 'Employee ID already exists';
 				return $return;
 			}
-			$this->db->query("UPDATE tbl_user SET uid = '$uid', first_name = '$first_name', last_name = '$last_name', username = '$username', email = '$email', image = '$user_image', role_id = $user_role, designation = '$designation', manager_id = $manager_id, updated_by = $this->user_id, updated_date = NOW() WHERE id = $id");
+			$this->db->query("UPDATE tbl_user SET uid = '$uid', first_name = '$first_name', last_name = '$last_name', username = '$username', email = '$email', department_id = $department_id, image = '$user_image', role_id = $user_role, designation = '$designation', manager_id = $manager_id, updated_by = $this->user_id, updated_date = NOW() WHERE id = $id");
 			
 			if($password != ''){
 				$this->db->query("UPDATE tbl_user SET password = '$password' WHERE id = $id");
@@ -179,7 +187,7 @@ class Admin_model extends CI_Model{
 		if($type == 'INSERT'){			
 			$this->db->query("INSERT INTO tbl_group (name, created_by, created_date, status) VALUES ('$name', $this->user_id, NOW(), 'Active'); ");
 			$return['status'] = true;
-			$return['id'] = $this->db->query("SELECT MAX(id) AS id FROM tbl_group")->row()->id;
+			$return['id'] = $id= $this->db->query("SELECT MAX(id) AS id FROM tbl_group")->row()->id;
 			$return['message'] = 'Group created successfully';
 		}
 		if($type == 'UPDATE'){			
@@ -366,10 +374,19 @@ class Admin_model extends CI_Model{
 		$session_id = isset($data['session_id']) ? (int)$data['session_id'] : 0;
 
 		$user_id = isset($data['user_id']) ? (int)$data['user_id'] : 0;
+		$status = isset($data['status']) ? (string)$data['status'] : '';
 
 		
 		if($type == 'ALL'){
-			return $this->db->query("SELECT c.*,cc.name as category_name FROM tbl_course c INNER JOIN tbl_course_category cc ON cc.id = c.category_id WHERE c.created_by = $this->user_id")->result();
+			if($this->session->userdata('role_name') == $this->config->item('admin_role')){
+				return $this->db->query("SELECT c.*,cc.name as category_name,(SELECT COUNT(*) FROM tbl_course_published WHERE id = c.id) AS published FROM tbl_course c INNER JOIN tbl_course_category cc ON cc.id = c.category_id")->result();
+			}else{
+				if($status == 'published'){
+					return $this->db->query("SELECT c.*,cc.name as category_name,(SELECT COUNT(*) FROM tbl_course_published WHERE id = c.id) AS published FROM tbl_course_published c INNER JOIN tbl_course_category cc ON cc.id = c.category_id WHERE c.created_by = $this->user_id")->result();
+				}else{
+					return $this->db->query("SELECT c.*,cc.name as category_name,(SELECT COUNT(*) FROM tbl_course_published WHERE id = c.id) AS published FROM tbl_course c INNER JOIN tbl_course_category cc ON cc.id = c.category_id WHERE c.created_by = $this->user_id")->result();
+				}
+			}
 		}
 		if($type == 'S'){
 			return $this->db->query("SELECT * FROM tbl_course WHERE id = $id")->row();
@@ -395,7 +412,7 @@ class Admin_model extends CI_Model{
 
 		}	
 		if($type == 'USERS'){
-			return $this->db->query("SELECT u.first_name,u.last_name,u.email,u.id,u.uid,d.name as designation,cu.register_type,cu.course_type,cu.status as register_status,IF((SELECT COUNT(*) FROM tbl_course_session_users WHERE course_id = cu.course_id AND user_id = u.id AND end_date < NOW()),'Completed','Not completed') AS status FROM tbl_user u INNER JOIN tbl_designation d ON d.id = u.designation INNER JOIN tbl_course_users cu ON cu.user_id = u.id WHERE cu.course_id = $id")->result();
+			return $this->db->query("SELECT u.first_name,u.last_name,u.email,u.id,u.uid,d.name as designation,cu.register_type,cu.course_type,cu.status as register_status,IF((SELECT COUNT(*) FROM tbl_course_session_users WHERE course_id = cu.course_id AND user_id = u.id AND end_date < NOW()),'Completed','Not completed') AS status,(SELECT COUNT(*) FROM tbl_user_assessments WHERE user_id = cu.user_id AND assessment_id = (SELECT assessment_id FROM tbl_course_assessments_published WHERE course_id = cu.course_id AND mandatory = 1 LIMIT 1)) AS attempts,(SELECT CONCAT(ua.marks,'/',ua.total_marks) AS marks FROM tbl_user_assessments ua INNER JOIN tbl_course_assessments_published ca ON ca.course_id = ua.course_id AND ca.assessment_id = ua.assessment_id WHERE ca.course_id = cu.course_id AND ua.user_id = cu.user_id AND ca.mandatory = 1 AND marks >= (SELECT pass_marks FROM tbl_assessment WHERE id = ca.assessment_id)) AS marks FROM tbl_user u INNER JOIN tbl_designation d ON d.id = u.designation INNER JOIN tbl_course_users cu ON cu.user_id = u.id WHERE cu.course_id = $id")->result();
 		}
 		if($type == 'DESIGNATIONS'){
 			return $this->db->query("SELECT d.*,(SELECT COUNT(*) FROM tbl_course_users WHERE designation_id = d.id) AS users FROM tbl_designation d INNER JOIN tbl_course_designations dc ON d.id = dc.designation_id WHERE dc.course_id = $id")->result();
@@ -427,6 +444,9 @@ class Admin_model extends CI_Model{
 		if($type == 'ASSESSMENTS'){
 			return $this->db->query("SELECT * FROM tbl_course_assessments WHERE course_id = $id AND chapter_id = $chapter_id")->result();
 		}
+		if($type == 'COURSE_ASMT'){
+			return $this->db->query("SELECT a.* FROM tbl_course_assessments ca INNER JOIN tbl_assessment a ON a.id = ca.assessment_id WHERE ca.course_id = $id AND ca.mandatory = 1")->row();
+		}
 		if($type == 'SECTIONS_LIST'){
 			return $this->db->query("SELECT * FROM tbl_course_sections_published WHERE course_id = $id")->result();
 		}
@@ -452,10 +472,10 @@ class Admin_model extends CI_Model{
 			return $this->db->query("SELECT c.*,cu.date_time,IF((SELECT COUNT(*) FROM tbl_course_session_users WHERE course_id = c.id AND user_id = $this->user_id AND end_date < NOW()),'Completed','Not completed') AS status  FROM tbl_course_published c INNER JOIN tbl_course_users cu ON cu.course_id = c.id WHERE cu.user_id = $this->user_id ORDER BY cu.date_time DESC LIMIT 5")->result();
 		}
 		if($type == 'USERALL'){
-			return $this->db->query("SELECT c.*,cu.course_type, IF((SELECT COUNT(*) FROM tbl_course_session_users WHERE course_id = c.id AND user_id = $user_id AND end_date < NOW()),'Completed','Not completed') AS status FROM tbl_course_published c INNER JOIN tbl_course_users cu ON cu.course_id = c.id WHERE cu.user_id = $user_id")->result();
+			return $this->db->query("SELECT c.name,cu.course_type, IF((SELECT COUNT(*) FROM tbl_course_session_users WHERE course_id = c.id AND user_id = 5 AND end_date < NOW()),'Completed','Not completed') AS status,(SELECT COUNT(*) FROM tbl_user_assessments WHERE user_id = cu.user_id AND assessment_id = (SELECT assessment_id FROM tbl_course_assessments_published WHERE course_id = cu.course_id AND mandatory = 1 LIMIT 1)) AS attempts,(SELECT CONCAT(ua.marks,'/',ua.total_marks) AS marks FROM tbl_user_assessments ua INNER JOIN tbl_course_assessments_published ca ON ca.course_id = ua.course_id AND ca.assessment_id = ua.assessment_id WHERE ca.course_id = cu.course_id AND ua.user_id = cu.user_id AND ca.mandatory = 1 AND marks >= (SELECT pass_marks FROM tbl_assessment WHERE id = ca.assessment_id)) AS marks FROM tbl_course_published c INNER JOIN tbl_course_users cu ON cu.course_id = c.id WHERE cu.user_id = $user_id")->result();
 		}
 		if($type == 'ONGOING'){
-			return $this->db->query("SELECT c.*,cu.course_type, csu.end_date FROM tbl_course_published c INNER JOIN tbl_course_users cu ON cu.course_id = c.id INNER JOIN tbl_course_session_users csu WHERE cu.user_id = $user_id AND csu.end_date >= NOW() GROUP BY csu.course_id")->result();
+			return $this->db->query("SELECT c.*,cu.course_type, csu.end_date FROM tbl_course_published c INNER JOIN tbl_course_users cu ON cu.course_id = c.id INNER JOIN tbl_course_session_users csu WHERE cu.user_id = $user_id AND csu.course_id = cu.course_id AND csu.end_date >= NOW() GROUP BY csu.course_id")->result();
 		}
 		if($type == 'COMPLETED'){
 			return $this->db->query("SELECT c.*, cu.course_type, csu.end_date FROM tbl_course_published c INNER JOIN tbl_course_users cu ON cu.course_id = c.id INNER JOIN tbl_course_session_users csu WHERE cu.user_id = $user_id AND csu.end_date < NOW() GROUP BY csu.course_id")->result();
@@ -485,9 +505,10 @@ class Admin_model extends CI_Model{
 		$session_id = (int)$this->input->post('session_id');
 		$image = file_exists($image) ? $image : $this->config->item('default_img');
 		$eduration = (int)$this->config->item("elearning_duration");
+		$assessment_id = (int)$this->input->post("assessment_id");
 		
 		if($type == 'INSERT_BASIC'){			
-			$this->db->query("INSERT INTO tbl_course (entity_id, name, category_id, image, elearning, eduration, promo_content_type, promo_content, created_by, updated_by, created_date, updated_date, status) VALUES ($this->entity_id, '$name', $category_id, '$image', $elearning, $eduration '$promo_content_type', '$promo_content', $this->user_id, $this->user_id, NOW(), NOW(), 'Saved')");
+			$this->db->query("INSERT INTO tbl_course (entity_id, name, category_id, image, elearning, eduration, promo_content_type, promo_content, created_by, updated_by, created_date, updated_date, status) VALUES ($this->entity_id, '$name', $category_id, '$image', $elearning, $eduration, '$promo_content_type', '$promo_content', $this->user_id, $this->user_id, NOW(), NOW(), 'Saved')");
 			$return['status'] = true;
 			$return['id'] = $id = $this->db->query("SELECT MAX(id) AS id FROM tbl_course")->row()->id;
 			$return['message'] = 'Course created successfully';
@@ -550,6 +571,18 @@ class Admin_model extends CI_Model{
 				$this->db->query("INSERT INTO tbl_course_assessments(course_id,assessment_id,chapter_id) VALUES ($id,$a,$chapter_id)");
 			}
 		}
+		if($type == 'ASSESSMENT'){
+			$check=$this->db->query("SELECT * FROM tbl_course_assessments WHERE assessment_id = $assessment_id AND course_id = $id AND mandatory = 1")->row();
+			if($check){
+				$this->db->query("UPDATE tbl_course_assessments SET assessment_id = $assessment_id WHERE course_id = $id AND mandatory = 1");
+				$return['message'] = 'Assessment updated to course successfully';
+			}else{
+				$this->db->query("INSERT INTO tbl_course_assessments(course_id,assessment_id,chapter_id,mandatory) VALUES ($id,$assessment_id,0,1)");				
+				$return['message'] = 'Assessment added to course successfully';
+			}
+			$return['status'] = true;
+			$return['id'] = $id;
+		}
 		if($type == 'PUBLISH'){
 			
 			//Basic Details
@@ -599,18 +632,31 @@ class Admin_model extends CI_Model{
 		$type = isset($data['type']) ? $data['type'] : '';
 		$id = isset($data['id']) ? (int)$data['id'] : 0;
 		$user_id = isset($data['user_id']) ? (int)$data['user_id'] : 0;
+		$asmt_user_id = isset($data['asmt_user_id']) ? (int)$data['asmt_user_id'] : 0;
+		$session_id = isset($data['session_id']) ? (int)$data['session_id'] : 0;
 		
 		if($type == 'S'){
 			return $this->db->query("SELECT * FROM tbl_assessment WHERE id = $id")->row();
 		}
 		if($type == 'L'){
-			return $this->db->query("SELECT *,(SELECT COUNT(*) FROM tbl_assessment_questions WHERE assessment_id = a.id) AS questions FROM tbl_assessment a WHERE created_by = $this->user_id")->result();
+			
+			if($this->session->userdata('role_name') == $this->config->item('admin_role')){
+				return $this->db->query("SELECT *,(SELECT COUNT(*) FROM tbl_assessment_questions WHERE assessment_id = a.id) AS questions FROM tbl_assessment a")->result();
+			}else{
+				return $this->db->query("SELECT *,(SELECT COUNT(*) FROM tbl_assessment_questions WHERE assessment_id = a.id) AS questions FROM tbl_assessment a WHERE created_by = $this->user_id")->result();
+			}
+		}
+		if($type == 'QLA'){
+			return $this->db->query("SELECT aq.*,uas.user_answer,uas.points FROM tbl_assessment_questions aq LEFT JOIN tbl_user_assessment_scores uas ON aq.id = uas.question_id AND uas.asmt_user_id = $asmt_user_id WHERE aq.assessment_id = $id")->result();
 		}
 		if($type == 'QL'){
 			return $this->db->query("SELECT * FROM tbl_assessment_questions WHERE assessment_id = $id")->result();
 		}
 		if($type == 'OL'){
 			return $this->db->query("SELECT * FROM tbl_assessment_options WHERE assessment_id = $id")->result();
+		}
+		if($type == 'HISTORY'){
+			return $this->db->query("SELECT ua.*,a.pass_marks FROM tbl_user_assessments ua INNER JOIN tbl_assessment a ON a.id = ua.assessment_id WHERE ua.assessment_id = $id AND ua.user_id = $user_id AND session_id = $session_id ORDER BY created_date DESC")->result();
 		}
 		if($type == 'STATUS'){
 			return $this->db->query("SELECT SUM(s.points) AS marks,(SELECT SUM(marks) marks FROM tbl_assessment_questions WHERE assessment_id = s.assessment_id) AS total_marks FROM tbl_user_assessment_scores s WHERE s.assessment_id = $id AND s.user_id = $user_id")->row();
@@ -620,7 +666,13 @@ class Admin_model extends CI_Model{
 		}
 		if($type == 'USERALL'){
 			return $this->db->query("SELECT a.*,IF((SELECT COUNT(*) FROM tbl_user_assessment_scores WHERE assessment_id = ca.assessment_id AND course_id = ca.course_id AND user_id = $user_id),'Completed','Not Completed') AS status,(SELECT SUM(points) FROM tbl_user_assessment_scores WHERE assessment_id = ca.assessment_id AND course_id = ca.course_id AND user_id = $user_id) AS score,(SELECT SUM(marks) marks FROM tbl_assessment_questions WHERE assessment_id = a.id) AS total_marks FROM tbl_assessment a INNER JOIN tbl_course_assessments ca ON ca.assessment_id = a.id INNER JOIN tbl_course_users cu ON ca.course_id = cu.course_id WHERE cu.user_id = $user_id")->result();
-		}	
+		}
+		if($type == 'REQUESTS'){
+			return $this->db->query("SELECT a.id,a.name,u.first_name,u.last_name,ua.id as asmt_user_id,ua.course_id FROM tbl_user_assessments ua INNER JOIN tbl_assessment a ON ua.assessment_id = a.id INNER JOIN tbl_user u ON u.id = ua.user_id WHERE evaluated = 0 AND a.created_by = $this->user_id ORDER BY ua.created_date DESC")->result();
+		}
+		if($type == 'ASMT_USER_ID'){
+			return $this->db->query("SELECT a.* FROM tbl_user_assessments ua INNER JOIN tbl_assessment a ON ua.assessment_id = a.id INNER JOIN tbl_user u ON u.id = ua.user_id WHERE ua.id = $asmt_user_id")->row();
+		}
 	}
 	function ins_upd_assessment(){
 		$return['status'] = false;$return['message'] = 'Failed';
@@ -630,17 +682,20 @@ class Admin_model extends CI_Model{
 		$question_type = (string)$this->input->post('question_type');
 		$random = (string)$this->input->post('random');
 		$mark_type = (string)$this->input->post('mark_type');
+		$asmt_user_id = (int)$this->input->post('asmt_user_id');
 		$mark_per_question = (int)$this->input->post('mark_per_question');
+		$pass_marks = (int)$this->input->post('pass_marks');
+		$display_questions = (int)$this->input->post('display_questions');
 		$questions = json_decode($this->input->post('questions'));
 		
 		if($type == 'INSERT_BASIC'){			
-			$this->db->query("INSERT INTO tbl_assessment (name, question_type, random, mark_type, mark_per_question, created_by, created_date, updated_date, status) VALUES ('$name', '$question_type', '$random', '$mark_type', '$mark_per_question', '$this->user_id', NOW(), NOW(), 'Active')");
+			$this->db->query("INSERT INTO tbl_assessment (name, question_type, random, mark_type, mark_per_question, pass_marks, display_questions, created_by, created_date, updated_date, status) VALUES ('$name', '$question_type', '$random', '$mark_type', $mark_per_question, $pass_marks, $display_questions, '$this->user_id', NOW(), NOW(), 'Active')");
 			$return['status'] = true;
 			$return['id'] = $this->db->query("SELECT MAX(id) AS id FROM tbl_assessment")->row()->id;
 			$return['message'] = 'Assessment created successfully';
 		}
 		if($type == 'UPDATE_BASIC'){			
-			$this->db->query("UPDATE tbl_assessment SET name = '$name', question_type = '$question_type', random = '$random', mark_type = '$mark_type', mark_per_question = '$mark_per_question', updated_date = NOW() WHERE id = $id");
+			$this->db->query("UPDATE tbl_assessment SET name = '$name', question_type = '$question_type', random = '$random', mark_type = '$mark_type', mark_per_question = '$mark_per_question', pass_marks = '$pass_marks', display_questions = '$display_questions', updated_date = NOW() WHERE id = $id");
 			$return['status'] = true;
 			$return['id'] = $id;
 			$return['message'] = 'Assessment updated successfully';
@@ -650,7 +705,7 @@ class Admin_model extends CI_Model{
 			$this->db->query("DELETE FROM tbl_assessment_options WHERE assessment_id = $id");
 			foreach($questions as $q){
 				$marks = (int)$q->marks;
-				$this->db->query("INSERT INTO tbl_assessment_questions (assessment_id, question, question_type, marks) VALUES ($id, '$q->name', '$q->qtype', $marks)");
+				$this->db->query("INSERT INTO tbl_assessment_questions (assessment_id, question, video, image, question_type, marks) VALUES ($id, '$q->name', '$q->video', '$q->image', '$q->qtype', $marks)");
 				$qid = $this->db->query("SELECT MAX(id) AS id FROM tbl_assessment_questions")->row()->id;
 				foreach($q->options as $o){
 					$answer = (int)$o->answer;
@@ -660,6 +715,21 @@ class Admin_model extends CI_Model{
 			$return['status'] = true;
 			$return['id'] = $id;
 			$return['message'] = 'Assessment updated successfully';
+		}
+		if($type == 'EVALUATION'){
+			$marks = (array)json_decode($this->input->post("marks"),true);
+			foreach($marks as $m){
+				$this->db->query("UPDATE tbl_user_assessment_scores SET points = $m[1],evaluated = 1 WHERE question_id = $m[0] AND asmt_user_id = $asmt_user_id");
+			}
+			$check = $this->db->query("SELECT COUNT(*) AS temp FROM tbl_user_assessment_scores WHERE evaluated = 0 AND asmt_user_id = $asmt_user_id")->row()->temp;
+			if($check == 0){
+				$this->db->query("UPDATE tbl_user_assessments SET evaluated = 1 WHERE id = $asmt_user_id");
+			}
+			
+			$this->db->query("UPDATE tbl_user_assessments SET marks = (SELECT SUM(points) FROM tbl_user_assessment_scores WHERE asmt_user_id = $asmt_user_id) WHERE id = $asmt_user_id");
+			
+			$return['status'] = true;
+			$return['message'] = 'Assessment evaluated successfully';
 		}
 		
 		return $return;
@@ -687,6 +757,14 @@ class Admin_model extends CI_Model{
 			$path = $uploaddir.date('Ymdhis').'_'.$user_id.'.'.$extension;
 			
 			if(move_uploaded_file($file["tmp_name"],$path)){
+				
+				if(strtolower($extension) == 'zip'){
+					$this->load->library('unzip');
+					$folderName=str_replace(".zip","",$path);
+					if (!file_exists($folderName))mkdir($folderName,0777);
+					$this->unzip->extract($path, $folderName);
+					$path= $folderName.'/Playing/Playing.html';
+				}
 				$return['status'] = true;
 				$return['message'] = 'Success';
 				$return['path'] = $path;
@@ -743,8 +821,15 @@ class Admin_model extends CI_Model{
 	}
 	function submit_assessment(){
 		$course_id = (int)$this->input->post("course_id");
+		$session_id = (int)$this->input->post("session_id");
 		$assessment_id = (int)$this->input->post("assessment_id");
 		$answers = $this->input->post("answers");
+		
+		$total_marks = $this->db->query("SELECT SUM(marks) AS marks FROM tbl_assessment_questions WHERE assessment_id = $assessment_id")->row()->marks;
+		
+		$this->db->query("INSERT INTO tbl_user_assessments(user_id,course_id,session_id,assessment_id,total_marks,evaluated,created_date) values($this->user_id,$course_id,$session_id,$assessment_id,$total_marks,0,NOW())");
+		
+		$id = $this->db->query("SELECT MAX(id) AS id FROM tbl_user_assessments")->row()->id;
 		
 		$qqry = $this->db->query("SELECT o.*,q.marks,q.question_type FROM tbl_assessment_options o INNER JOIN tbl_assessment_questions q ON q.id = o.question_id WHERE q.assessment_id = '$assessment_id'")->result();
 		foreach($answers as $a){
@@ -777,9 +862,15 @@ class Admin_model extends CI_Model{
 				else
 					$options = $a[1];
 				
-				$this->db->query("INSERT INTO tbl_user_assessment_scores (assessment_id, user_id, course_id, question_id, user_answer, points,evaluated,status) VALUES ($assessment_id, $this->user_id, $course_id, $a[0], '$options', $marks,$evaluated,$correct)");
+				$this->db->query("INSERT INTO tbl_user_assessment_scores (asmt_user_id,assessment_id, user_id, course_id, question_id, user_answer, points,evaluated,status) VALUES ($id,$assessment_id, $this->user_id, $course_id, $a[0], '$options', $marks,$evaluated,$correct)");
 			}
 		}
+		//Updation Total marks
+		$this->db->query("UPDATE tbl_user_assessments SET marks = (SELECT SUM(points) FROM tbl_user_assessment_scores WHERE asmt_user_id = $id) WHERE id = $id");
+		
+		//Checking evaluation
+		$this->db->query("UPDATE tbl_user_assessments SET evaluated = 1 WHERE id= $id AND (SELECT COUNT(*) FROM tbl_user_assessment_scores WHERE asmt_user_id = $id AND evaluated = 0) = 0");
+		
 		return true; 
 	}
 	function course_registration(){
@@ -857,15 +948,90 @@ class Admin_model extends CI_Model{
 		}
 	}
 	function ins_upd_notification($data){
+		$return['status'] = false;
+		$return['message'] = 'Error';
 		$type = isset($data['type']) ? $data['type'] : 'INSERT';
 		$user_id = isset($data['user_id']) ? (int)$data['user_id'] : 0;
 		$subject = isset($data['subject']) ? (string)$data['subject'] : 'No Subject';
 		$content = isset($data['content']) ? (string)$data['content'] : '';
+		$assign_type = isset($data['assign_type']) ? (string)$data['assign_type'] : '';
+		$group_id = isset($data['group_id']) ? (int)$data['group_id'] : '';
+		$designation_id = isset($data['designation_id']) ? (int)$data['designation_id'] : '';
+		$users = isset($data['users']) ? (array)$data['users'] : array();
+		$status = isset($data['status']) ? $data['status'] : 'Not read';
 		if($type == 'INSERT'){
 			$created_by = $this->user_id;
 			$image = $this->session->userdata('profile_pic');
-			$this->db->query("INSERT INTO tbl_notification (user_id, subject, content, image, module_id, module, created_by,  created_date, status) VALUES ($user_id, '$subject', '$content', '$image', 0, '', '$created_by', NOW(), 'Not read')");
+			$this->db->query("INSERT INTO tbl_notification (user_id, subject, content, image, module_id, module, created_by,  created_date, status) VALUES ($user_id, '$subject', '$content', '$image', 0, '', '$created_by', NOW(), '$status')");
+			$return['status'] = true;
+			$return['message'] = 'Notification sent successfully';
 		}
+		if($type == 'HR_SEND'){
+			$created_by = $this->user_id;
+			$image = $this->session->userdata('profile_pic');
+			
+			if($assign_type == 'GROUP'){
+				$this->db->query("INSERT INTO tbl_notification (user_id, subject, content, image, created_by,  created_date, status) SELECT user_id, '$subject', '$content','$image',$created_by,NOW(),'$status' FROM  tbl_group_users WHERE group_id = $group_id");
+			}
+			if($assign_type == 'DESIGNATION'){
+				$this->db->query("INSERT INTO tbl_notification (user_id, subject, content, image, created_by,  created_date, status) SELECT id, '$subject', '$content','$image',$created_by,NOW(),'$status' FROM  tbl_user WHERE designation = $designation_id");
+			}
+			if($assign_type == 'USER'){
+				foreach($users as $user_id){
+					$this->db->query("INSERT INTO tbl_notification (user_id, subject, content, image, created_by,  created_date, status) VALUES($user_id, '$subject', '$content','$image',$created_by,NOW(),'$status')");
+				}
+			}
+			$return['status'] = true;
+			$return['message'] = 'Notification sent successfully';
+		}
+		return $return;
+	}
+	function download_excel(){
+	  
+		$filename = "assets/download.csv";
+		!unlink($filename);
+		$file = fopen($filename,"w");
+		
+		$type = $this->input->post("type");
+		$course_id = $this->input->post("course_id");
+		$qry = array();
+		
+		if($type == 'ALL_USERS'){
+			$qry = $this->db->query("SELECT first_name,last_name,email,username,d.name as designation FROM tbl_user u INNER JOIN tbl_designation d ON d.id = u.designation")->result_array();
+			fputcsv($file,explode(',','First Name,Last Name,Email,Username, Designation'));
+		}
+		
+		if($type == 'COURSE_USERS'){
+			$qry = $this->db->query("SELECT cu.user_id,u.first_name,u.last_name,u.email,u.uid,d.name as designation,cu.register_type,cu.course_type,cu.status as register_status,IF((SELECT COUNT(*) FROM tbl_course_session_users WHERE course_id = cu.course_id AND user_id = u.id AND end_date < NOW()),'Completed','Not completed') AS status FROM tbl_user u INNER JOIN tbl_designation d ON d.id = u.designation INNER JOIN tbl_course_users cu ON cu.user_id = u.id WHERE cu.course_id = $course_id")->result_array();
+			
+			$aqry = $this->db->query("SELECT cu.user_id,cu.course_id,ca.assessment_id,IFNULL((SELECT SUM(points) FROM tbl_user_assessment_scores WHERE assessment_id = ca.assessment_id AND user_id = cu.user_id AND course_id = cu.course_id),'Not completed') AS status FROM tbl_course_users cu INNER JOIN tbl_course_assessments_published ca ON ca.course_id = cu.course_id WHERE cu.course_id = $course_id")->result();
+			
+			$alist = $this->db->query("SELECT * FROM tbl_course_assessments_published WHERE course_id = $course_id")->result();
+			$astr = "";$i=1;
+			foreach($alist as $a){
+				$astr.=",Assessment ".$i;
+				$i++;
+			}
+			fputcsv($file,explode(',','First Name,Last Name,Email,Employee ID,Designation,Register Type,Course Type,Register Status'.$astr.',Status'));
+		}
+		
+		foreach ($qry as $row)
+		{
+		  $asmt = array();
+		  foreach($aqry as $a){
+			if($a->user_id == $row['user_id']){
+				array_push($asmt,$a->status);
+			}
+		  }
+		  $temp['status'] = $row['status'];
+		  unset($row['user_id']);
+		  unset($row['status']);
+		  $row = array_merge($row,$asmt,$temp);
+		  fputcsv($file,$row);
+		}
+		fclose($file);
+		
+		return base_url($filename);
 	}
 }
 ?>

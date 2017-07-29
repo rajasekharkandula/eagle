@@ -87,6 +87,21 @@ class Home extends CI_Controller {
 		else
 			echo 'Invalid URL';
 	}
+	function assessment($id=0,$cid=0,$sid=0){
+		$pageData['page'] = 'COURSE';
+		$pageData['data'] = $this->admin_model->get_header();
+		$data['head'] = $this->load->view('templates/head',$pageData,true);
+		$data['header'] = $this->load->view('templates/header',$pageData,true);
+		$data['footer'] = $this->load->view('templates/footer',$pageData,true);
+		$data['assessment'] = $this->admin_model->get_assessment(array('type'=>'S','id'=>$id));
+		if($data['assessment']){
+			$data['questions'] = $this->admin_model->get_assessment(array('type'=>'QL','id'=>$id));
+			$data['options'] = $this->admin_model->get_assessment(array('type'=>'OL','id'=>$id));
+			$data['course_id'] = $cid;
+			$data['session_id'] = $sid;
+		}		
+		$this->load->view('home/course/assessment_play',$data);
+	}
 	function course($id=0,$cid=0,$aid=0){
 		
 		$pageData['page'] = 'COURSE';
@@ -97,22 +112,23 @@ class Home extends CI_Controller {
 		$reg_status = $this->admin_model->get_course(array('type'=>'REG_STATUS','id'=>$id,'user_id'=>$this->session->userdata('user_id')));
 		$data['course'] = $course = $this->admin_model->get_course(array('type'=>'S_P','id'=>$id));
 		$data['chapter'] = $chapter = $this->admin_model->get_course(array('type'=>'CHAPTER_PLAY','id'=>$id,'chapter_id'=>$cid));
+		$data['course_asmt'] = $this->admin_model->get_course(array('type'=>'COURSE_ASMT','id'=>$id));
 		//var_dump($data['chapter']);exit();
-		$data['sections'] = $this->admin_model->get_course(array('type'=>'SECTIONS_LIST','id'=>$id));
-		$data['chapters'] = $this->admin_model->get_course(array('type'=>'CHAPTERS_LIST','id'=>$id));
-		$data['assessments'] = $this->admin_model->get_course(array('type'=>'ASMT_LP','id'=>$id));
-		$data['assessment'] = $this->admin_model->get_assessment(array('type'=>'S','id'=>$aid));
-		if($data['assessment']){
-			$data['questions'] = $this->admin_model->get_assessment(array('type'=>'QL','id'=>$aid));
-			
-			$data['options'] = $this->admin_model->get_assessment(array('type'=>'OL','id'=>$aid));
-			$data['assessment_status'] = $this->admin_model->get_assessment(array('type'=>'STATUS','id'=>$aid,'user_id'=>$this->session->userdata("user_id")));
-			//var_dump($data['assessment_status']);exit();
-		}
-		if($course && $reg_status && $chapter)
+		if($course && $reg_status && $chapter){
+			$data['sections'] = $this->admin_model->get_course(array('type'=>'SECTIONS_LIST','id'=>$id));
+			$data['chapters'] = $this->admin_model->get_course(array('type'=>'CHAPTERS_LIST','id'=>$id));
+			$data['assessments'] = $this->admin_model->get_course(array('type'=>'ASMT_LP','id'=>$id));
+			$data['assessment'] = $this->admin_model->get_assessment(array('type'=>'S','id'=>$aid));
+			if($data['assessment']){
+				$data['questions'] = $this->admin_model->get_assessment(array('type'=>'QL','id'=>$aid));
+				$data['options'] = $this->admin_model->get_assessment(array('type'=>'OL','id'=>$aid));
+				$data['history'] = $this->admin_model->get_assessment(array('type'=>'HISTORY','id'=>$aid,'user_id'=>$this->session->userdata("user_id"),'session_id'=>$course->id));
+				//var_dump($data['history']);exit();
+			}		
 			$this->load->view('home/course/play',$data);
-		else
+		}else{
 			echo 'Invalid URL';
+		}
 	}
 
 }

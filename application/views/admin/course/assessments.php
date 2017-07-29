@@ -9,9 +9,10 @@
 				<div class="col-md-6">
 					<h2 class="page-title">List of Assessments</h2>
 				</div>
-				<div class="col-md-4"></div>
-				<div class="col-md-2">
+				<div class="col-md-2"></div>
+				<div class="col-md-4">
 					<div class="page-actions text-right">
+						<a href="<?php echo base_url('trainer/requests'); ?>" class="btn">Evaluation Requests</a>
 						<a href="<?php echo base_url('admin/assessment/basic'); ?>" class="btn"><i class="fa fa-plus"></i> Add assessment</a>
 					</div>
 				</div>

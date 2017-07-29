@@ -9,9 +9,9 @@
 				<div class="col-md-6">
 					<h2 class="page-title">List of Users - <?php echo $course->name; ?></h2>
 				</div>
-				<div class="col-md-4"></div>
-				<div class="col-md-2">
+				<div class="col-md-6">
 					<div class="page-actions text-right">
+						<button class="btn download" data-type="COURSE_USERS" data-courseid="<?php echo $course->id; ?>">Download</button>
 						<a href="<?php echo base_url('admin/course_assign/'.$course->id); ?>" class="btn"><i class="fa fa-plus"></i> Assign</a>
 					</div>
 				</div>
@@ -37,10 +37,10 @@
 						  <tr>
 							<th>Employee ID</th>
 							<th>Name</th>
-							<th>Email</th>
-							<th>Designation</th>
 							<th>Course Type</th>
 							<th>Assign Type</th>
+							<th>Attempts</th>
+							<th>Assessment Score</th>
 							<th>Status</th>
 						  </tr>
 						</thead>
@@ -49,11 +49,11 @@
 						  <tr>
 							<td><?php echo $u->uid; ?></td>
 							<td><?php echo $u->first_name.' '.$u->last_name; ?></td>
-							<td><?php echo $u->email; ?></td>
-							<td><?php echo $u->designation; ?></td>
 							<td><?php echo $u->course_type; ?></td>
 							<td><?php echo $u->register_type; ?></td>
-							<td><?php echo $u->status; ?></td>
+							<td><?php echo $u->attempts; ?></td>
+							<td><?php echo $u->marks; ?></td>
+							<td><?php if($u->marks)echo 'Pass';else echo $u->status; ?></td>
 						  </tr>
 						  <?php } ?>
 						</tbody>

@@ -18,30 +18,49 @@
 							
 							<div id="questions">
 								<?php foreach($questions as $key=>$q){ ?>
-								<div class="box question" data-id="<?php echo ++$key; ?>" >
+								
+								<div class="box question" data-id="<?php echo ++$key; ?>">
 									<div class="row">
 										<div class="col-md-9">
 											<label class="qno"><?php echo $key; ?>. Question</label>
 											<div>
 											<textarea va_req="true" name="question" placeholder="Enter question..."><?php echo $q->question; ?></textarea>
 											</div>
+											<div class="pull-left">
+											<a href="#" class="video fileinput-button"><i class="fa fa-video-camera"></i> Add Video <input class="fileupload" id="video_upload_<?php echo $key; ?>" type="file" name="files" save_path="video_path_<?php echo $key; ?>"></a>
+											<input type="hidden" name="video" id="video_path_<?php echo $key; ?>" value="<?php echo $q->video; ?>"/>
+											</div>
+											<div class="pull-left">
+											<a href="#" class="image fileinput-button"><i class="fa fa-image"></i> Add Image <input class="fileupload" id="img_upload_<?php echo $key; ?>" type="file" name="files" save_path="img_path_<?php echo $key; ?>"></a>
+											<input type="hidden" name="image" id="img_path_<?php echo $key; ?>" value="<?php echo $q->image; ?>"/>
+											</div>
 											<ul>
 												<?php foreach($options as $o){ if($o->question_id == $q->id){ ?>
-												<li><input type="<?php if($assessment->question_type == 'Single Choice')echo 'radio';else echo 'checkbox';?>" name="answer<?php echo $key; ?>" <?php if($o->correct == 1)echo 'checked'; ?>> <textarea name="option" placeholder="Enter option..." va_req="true"><?php echo $o->options; ?></textarea><i class="fa fa-times remove_option"></i></li>
+												<li><input type="<?php if($q->question_type == 'Single Choice')echo 'radio';else echo 'checkbox';?>" name="answer<?php echo $key; ?>" <?php if($o->correct == 1)echo 'checked'; ?>> <textarea name="option" placeholder="Enter option..." va_req="true"><?php echo $o->options; ?></textarea><i class="fa fa-times remove_option"></i></li>
 												<?php } } ?>
 											</ul>
 										</div>
 										<div class="col-md-3">
-											<label>Question Type</label>
-											<input type="text" name="qtype" value="<?php echo $assessment->question_type; ?>" readonly>
+											<label>Answer Type</label>
+											<?php if($assessment->question_type != 'Mixed'){ ?>
+											<input type="text" class="qtype" name="qtype" value="<?php echo $assessment->question_type; ?>" readonly>
+											<?php }else{ ?>
+												<select va_req="true" class="select2 qtype" data-placeholder="Select answer type" name="qtype" data-id="<?php echo $key; ?>">
+													<option value=""></option>
+													<?php foreach((array)$this->config->item('question_type') as $qt){ if($qt != 'Mixed'){ ?>
+													<option <?php if($q->question_type == $qt)echo 'selected'; ?>><?php echo $qt; ?></option>
+													<?php } } ?>
+												</select>
+											<?php } ?>
 											<label>Marks</label>
 											<input type="number" name="marks" va_req="true" placeholder="Enter marks..."  value="<?php echo $assessment->mark_per_question; ?>">
-											<button class="btn btn-sm mt-10 add_option" data-id="<?php echo $key; ?>" data-type="<?php echo $assessment->question_type; ?>"><i class="fa fa-plus"></i> Add Option</button>
+											<button class="btn btn-sm mt-10 add_option hide" data-id="<?php echo $key; ?>"><i class="fa fa-plus"></i> Add Option</button>			
 										</div>
 									</div>
 									<div class="q_remove"><i class="fa fa-trash"></i> Remove</div>
 								</div>
-								<?php } ?>
+							
+							<?php } ?>
 							</div>
 							<div class="row">
 								<div class="col-md-9">
@@ -67,13 +86,31 @@
     $(document).ready(function(){
 		
 	});	
-	$(document).on('click','.add_option',function(){
+	$(document).on('change','select[name=qtype]',function(){
 		var id = $(this).data("id");
-		if($(this).data("type") == 'Multiple Choice')
-			$("div[data-id="+id+"].question ul").append('<li><input type="checkbox" name="answer'+id+'"> <textarea name="option" placeholder="Enter option..."></textarea><i class="fa fa-times remove_option"></i></li>');
-		else
-			$("div[data-id="+id+"].question ul").append('<li><input type="radio" name="answer'+id+'"> <textarea name="option" placeholder="Enter option..."></textarea><i class="fa fa-times remove_option"></i></li>');
+		$("div[data-id="+id+"].question ul li").remove();
+		$(".add_option[data-id="+id+"]").addClass("hide");
+		if($(this).val() == 'Single Choice' || $(this).val() == 'Multiple Choice'){
+			$(".add_option[data-id="+id+"]").removeClass("hide");
+		}
 	});
+	$(document).on('click','.add_option',function(){
+		var qtype = $(this).parents('.question').find("select[name=qtype]").val();
+		var id = $(this).data("id");
+		
+		switch(qtype){
+			case 'Single Choice':
+				$("div[data-id="+id+"].question ul").append('<li><input type="radio" name="answer'+id+'"> <textarea name="option" placeholder="Enter option..."></textarea><i class="fa fa-times remove_option"></i></li>');
+				break;
+			case 'Multiple Choice':
+				$("div[data-id="+id+"].question ul").append('<li><input type="checkbox" name="answer'+id+'"> <textarea name="option" placeholder="Enter option..."></textarea><i class="fa fa-times remove_option"></i></li>');
+				break;
+			default:
+				alert('Inalid Question Type');			
+		}
+		
+	});
+	
 	$(document).on('click','.remove_option,.q_remove',function(){
 		$(this).parent().remove();
 		var i = 1;
@@ -85,15 +122,19 @@
 	$('#add_question').on('click',function(){
 		$('#add_question').attr("disabled",true);
 		$('#add_question').html('<i class="fa fa-refresh spin"></i> Please wait...');
+		var i = parseInt($("#questions .question").length+1);
 		$.ajax({
 			url:'<?php echo base_url('admin/get_question_template'); ?>',
 			type:'POST',
-			data: {'qtype':'<?php echo $assessment->question_type; ?>','marks':'<?php echo $assessment->mark_per_question; ?>','i':parseInt($("#questions .question").length+1)},
+			data: {'qtype':'<?php echo $assessment->question_type; ?>','marks':'<?php echo $assessment->mark_per_question; ?>','i':i},
 			dataType:'HTML'
 		}).done(function(data){
 			$("#questions").append(data);
 			$('#add_question').removeAttr("disabled");
 			$('#add_question').html('<i class="fa fa-plus"></i> Add Question');
+			xu_validation.fileupload('<?php echo base_url();?>', '#video_upload_'+i, 'video', '<?php echo base_url('admin/upload_files/video');?>',/(\.|\/)(<?php foreach($this->config->item('ext_video') as $img_type){echo $img_type.'|';} ?>~~)$/i);
+			xu_validation.fileupload('<?php echo base_url();?>', '#img_upload_'+i, 'image', '<?php echo base_url('admin/upload_files/image');?>',/(\.|\/)(<?php foreach($this->config->item('ext_img') as $img_type){echo $img_type.'|';} ?>~~)$/i);
+			$(".select2").select2();
 		});
 	});
 	$('input[name=mark_type]').on('change',function(){
@@ -122,8 +163,10 @@
 			var obj = $(this);
 			var question = {},id=obj.data('id');			
 			question['name'] = obj.find("textarea[name=question]").val().trim();
+			question['video'] = obj.find("#video_path_"+id).val();
+			question['image'] = obj.find("#img_path_"+id).val();
 			question['marks'] = parseInt(obj.find("input[name=marks]").val());
-			question['qtype'] = obj.find("input[name=qtype]").val();
+			question['qtype'] = obj.find(".qtype[name=qtype]").val();
 			var options = [];
 			obj.find("textarea[name=option]").each(function(){
 				var obj2 = $(this);var option = {};

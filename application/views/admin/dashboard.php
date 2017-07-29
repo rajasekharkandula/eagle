@@ -8,15 +8,15 @@
 		<br>
 		<div class="row">
 			<div class="col-md-3 col-sm-4 col-xs-12">
-				<a href="<?php echo base_url('admin/courses'); ?>">
-				<div id="report1" style="height: 200px; width: 100%;"></div>
-				<span class="rcount"><?php echo $reports->courses; ?></span>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-12">
 				<a href="<?php echo base_url('admin/users'); ?>">
 				<div id="report3" style="height: 200px; width: 100%;"></div>
 				<span class="rcount"><?php echo $reports->users; ?></span>
+				</a>
+			</div>
+			<div class="col-md-3 col-sm-4 col-xs-12">
+				<a href="<?php echo base_url('admin/courses'); ?>">
+				<div id="report1" style="height: 200px; width: 100%;"></div>
+				<span class="rcount"><?php echo $reports->courses; ?></span>
 				</a>
 			</div>
 			<div class="col-md-3 col-sm-4 col-xs-12">
@@ -59,7 +59,7 @@
 					startAngle: 60,
 					toolTipContent: "{y}",
 					dataPoints: [
-					{ y: <?php echo $reports->courses; ?>}
+					{ y: <?php echo $reports->courses ? $reports->courses : 1; ?>}
 					]
 				}
 				]
@@ -86,7 +86,7 @@
 		
 			var report3 = new CanvasJS.Chart("report3", {
 				title: {
-					text: "My Team",
+					text: "Users",
 					fontColor: "#fff"
 				},
 				backgroundColor: "rgba(62, 62, 62, 0.88)",
@@ -116,7 +116,7 @@
 					startAngle: 60,
 					toolTipContent: "{y}",
 					dataPoints: [
-					{ y: <?php echo $reports->assessments; ?> }
+					{ y: <?php echo $reports->assessments ? $reports->assessments : 1; ?> }
 					]
 				}
 				]

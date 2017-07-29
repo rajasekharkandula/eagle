@@ -1,0 +1,4 @@
+"First Name","Last Name",Email,"Employee ID",Designation,"Register Type","Course Type","Register Status","Assessment 1",Status
+User,1,user@xucore.com,XUCORE001,"Associate Software Engineer ",GROUP,Mandatory,Registered,6,"Not completed"
+User,2,user2@xucore.com,XUCORE005,"Software Tester",GROUP,Mandatory,Registered,"Not completed","Not completed"
+User,3,user3@xucore.com,XUCORE006,"Software Tester",GROUP,Mandatory,Registered,"Not completed","Not completed"

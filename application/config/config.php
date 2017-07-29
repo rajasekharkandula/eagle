@@ -388,6 +388,7 @@ $config['ext_document'] = array('pdf','ppt','pptx','doc','docx','xls','xlsx','od
 $config['ext_scorm'] = array('zip'); //Scorm
 
 $config['content_type'] = array('Image', 'Audio', 'Video', 'SCORM', 'Document', 'URL'); //Promotional Content
+$config['question_type'] = array('Single Choice','Multiple Choice','Image', 'Audio', 'Video', 'Text', 'Document','Mixed'); //Question Type
 
 $config['default_user_img'] = 'assets/images/user.jpg'; //Default user image
 

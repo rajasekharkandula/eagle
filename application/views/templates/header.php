@@ -17,7 +17,7 @@
 							<img src="<?php echo base_url($n->image); ?>">
 							<div class="content">
 								<div><?php echo $n->subject; ?></div>
-								<div class="time"><i class="fa fa-clock-o"></i> <?php echo date('d M,y h:i A', strtotime($n->created_by)); ?></div>
+								<div class="time"><i class="fa fa-clock-o"></i> <?php echo date('d M,y h:i A', strtotime($n->created_date)); ?></div>
 							</div>
 						</li>
 						<?php } ?>
@@ -50,11 +50,11 @@
                 <li class="dropdown <?php if($page == 'MANAGE')echo 'active'; ?>">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage</a>
 					<ul class="dropdown-menu">
+						<li><a href="<?php echo base_url();?>admin/departments">Departments</a></li>
+						<li><a href="<?php echo base_url();?>admin/designations">Designations</a></li>
 						<li><a href="<?php echo base_url();?>admin/users">Users</a></li>
 						<li><a href="<?php echo base_url();?>admin/groups">Groups</a></li>
-						<li><a href="<?php echo base_url();?>admin/designations">Designations</a></li>
-						<li><a href="<?php echo base_url();?>admin/skills">Skills</a></li>
-						<li><a href="<?php echo base_url();?>admin/departments">Departments</a></li>
+						<li><a href="<?php echo base_url();?>admin/send_notification">Send Notifications</a></li>
 					</ul>
 				</li>
 				<li class="dropdown <?php if($page == 'COURSE')echo 'active'; ?>">
@@ -113,6 +113,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="<?php echo base_url('user/mycourses');?>">My Courses</a></li>
 						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>
+						<li><a href="<?php echo base_url('user/reports');?>">Reports</a></li>
 					</ul>
 				</li>
              </ul>
@@ -136,7 +137,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Courses</a>
 					<ul class="dropdown-menu">
 						<li><a href="<?php echo base_url('user/mycourses');?>">My Courses</a></li>
-						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>
+						<li><a href="<?php echo base_url('user/recommended');?>">Recommended Courses</a></li>				
 					</ul>
 				</li>
              </ul>

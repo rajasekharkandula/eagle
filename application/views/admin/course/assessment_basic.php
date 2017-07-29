@@ -5,6 +5,7 @@
 	<?php echo $header; ?>	
 	<div class="body-content">
 		<div class="container">
+			
 			<div class="row">
 				<div class="col-md-6">
 					<h2 class="page-title">Assessment Configuration</h2>
@@ -12,7 +13,7 @@
 			</div>
 			
 			<div class="row">
-				<div class="col-md-7">
+				<div class="col-md-9">
 					<div class="box">
 						<div class="text-right mb-5">Fields marked with (*) are mandatory</div>
 						<form id="assessment_form">
@@ -28,8 +29,9 @@
 								<div class="col-md-8">
 									<select class="select2" va_req="true" data-placeholder="Select question type" name="question_type">
 										<option value=""></option>
-										<option <?php if(isset($assessment->question_type))if($assessment->question_type == 'Single Choice')echo 'selected'; ?>>Single Choice</option>
-										<option <?php if(isset($assessment->question_type))if($assessment->question_type == 'Multiple Choice')echo 'selected'; ?>>Multiple Choice</option>
+										<?php foreach((array)$this->config->item('question_type') as $qt){ ?>
+										<option <?php if(isset($assessment->question_type))if($assessment->question_type == $qt)echo 'selected'; ?>><?php echo $qt; ?></option>
+										<?php } ?>
 									</select>
 								</div>
 							</div>
@@ -55,6 +57,18 @@
 								<label class="col-md-3">Mark per question <span>*</span></label>
 								<div class="col-md-8">
 									<input type="number" va_req="true" name="mark_per_question" placeholder="Enter mark per question" value="<?php if(isset($assessment->mark_per_question))echo $assessment->mark_per_question; ?>">
+								</div>
+							</div>
+							<div class="row mb-15" id="pass_marks">
+								<label class="col-md-3">Pass Marks <span>*</span></label>
+								<div class="col-md-8">
+									<input type="number" va_req="true" name="pass_marks" placeholder="Enter pass marks" value="<?php if(isset($assessment->pass_marks))echo $assessment->pass_marks; ?>">
+								</div>
+							</div>
+							<div class="row mb-15" id="display_questions">
+								<label class="col-md-3">No. of questions to display <span>*</span></label>
+								<div class="col-md-8">
+									<input type="number" va_req="true" name="display_questions" placeholder="Enter No. of questions to display" value="<?php if(isset($assessment->display_questions))echo $assessment->display_questions; ?>">
 								</div>
 							</div>
 							<div class="text-center mb-20">

@@ -28,7 +28,7 @@
 						<br>
 						<?php if(in_array(-1,$reg_sessions)){ ?>					
 						<a href="<?php echo base_url('home/course/'.$course->id); ?>" class="btn mt-10">Launch</a>
-						<?php }else{ ?>
+						<?php }else if($course->elearning){ ?>
 						<button class="btn mt-10 register" id="register_btn" data-courseid="<?php echo $course->id; ?>" data-type="Elearning">Register Elearning</button>
 						<?php } ?>
 						<br>
@@ -48,14 +48,14 @@
 				<li class="nav-item">
 				  <a class="nav-link" id="benefits-tab" data-toggle="tab" href="#benefits" role="tab" aria-controls="benefits" aria-expanded="false">Benefits</a>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item hide">
 				  <a class="nav-link" id="prerequisite-tab" data-toggle="tab" href="#prerequisite" role="tab" aria-controls="prerequisite" aria-expanded="false">Prerequisite</a>
 				</li>
 				<li class="nav-item">
 				  <a class="nav-link" id="elearning-tab" data-toggle="tab" href="#elearning" role="tab" aria-controls="elearning" aria-expanded="false">Contents</a>
 				</li>
 				<li class="nav-item">
-				  <a class="nav-link" id="sessions-tab" data-toggle="tab" href="#sessions" role="tab" aria-controls="sessions" aria-expanded="false">Sessions</a>
+				  <a class="nav-link" id="sessions-tab" data-toggle="tab" href="#sessions" role="tab" aria-controls="sessions" aria-expanded="false">Classroom Sessions</a>
 				</li>
 			  </ul>
 			  <div class="tab-content" id="myTabContent">
@@ -63,9 +63,14 @@
 				<?php echo $course->overview; ?>
 				<?php if(isset($course->promo_content_type)){ ?>
 					<?php if($course->promo_content_type == 'Video'){ ?>
-						<div id="course_player"> Loading ...</div>
-					<?php }else{ ?>
-						
+						<video width="100%" height="400" controls>
+						  <source src="<?php echo base_url($course->promo_content);?>" type="video/mp4">
+						Your browser does not support the video tag.
+						</video>
+					<?php }elseif($course->promo_content_type == 'SCORM' || $course->promo_content_type == 'Document'){ ?>
+						<iframe style="overflow:hide;" src="<?php echo base_url($course->promo_content);?>" width="800px" height="480px" ></iframe>
+					<?php }elseif($course->promo_content_type == 'Image'){	?>
+						<img src="<?php echo base_url($course->promo_content); ?>">
 					<?php } ?>
 				<?php } ?>
 				</div>
@@ -141,20 +146,7 @@
 	<script type="text/javascript">
 
     $(document).ready(function(){
-		<?php if(isset($course->promo_content_type)){ ?>
-		<?php if($course->promo_content_type == 'Video' || $course->promo_content_type == 'Audio'){ ?>
-		jwplayer("course_player").setup({
-			file: "<?php echo base_url($course->promo_content); ?>",
-			image: '<?php echo base_url('assets/images/backgrounds/bg.jpg');?>',
-			autostart: false,
-			width: "100%",
-			height: 500,
-			repeat:false,
-			androidhls:true,
-			stretching : 'exactfit'
-		});
-		<?php } ?>
-		<?php } ?>
+		
 	});
 	$(".register").on("click",function(){
 		var obj = $(this);

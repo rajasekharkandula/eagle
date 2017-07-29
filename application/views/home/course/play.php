@@ -5,6 +5,7 @@
 	<?php echo $header; ?>	
 	<div class="body-content">
 		<div class="container view">
+			
 			<div class="row">
 				<div class="col-md-6">
 					<h2 class="page-title"><?php echo $course->name; ?></h2>
@@ -40,38 +41,42 @@
 							
 							<?php } } ?>						
 						<?php } ?>
+							<?php if($course_asmt){ ?>
+							<li class="section <?php if(isset($assessment->id)){if($assessment->id == $course_asmt->id)echo 'active';} ?>" >
+								<a href="<?php echo base_url("home/course/".$course->id.'/'.$li->id.'/'.$course_asmt->id); ?>"><i class="fa fa-question"></i> Final Assessment</a>
+							</li>
+							<?php } ?>
 						</ul>
 					</div>
 				</div>
 				<div class="col-md-9">
 					<div class="box">
 					<?php if($assessment){ ?>
-					<?php if(isset($assessment_status->marks)){ ?>
-						<h3>Your Assessment Score is <?php echo $assessment_status->marks.'/'.$assessment_status->total_marks; ?></h3>
-					<?php }else{  ?>
-					<div class="qt">					
-						<ol>
-						<?php $i=1;foreach($questions as $q){ ?>
-							<li data-qid="<?php echo $q->id; ?>">
-								<div class="qname"><?php echo $q->question; ?></div>
-								<ul>
-									<?php foreach($options as $o){ if($o->question_id == $q->id){ ?>
-									<li>
-										<input type="<?php if($q->question_type == 'Single Choice')echo 'radio';else echo 'checkbox'; ?>" class="option" name="option_<?php echo $i; ?>" data-type="<?php echo $q->question_type; ?>" value="<?php echo $o->id; ?>">
-										<?php echo $o->options; ?>
-									</li>
-									<?php } } ?>
-								</ul>
-							</li>
-						<?php $i++; } ?>
-						</ol>
-					</div>
-					<div class="text-center">
-						<button class="btn" type="button" id="csubmit">Submit Assessment</button>
-					</div>
+					<a class="btn btn-sm mb-10" href="<?php echo base_url('home/assessment/'.$assessment->id.'/'.$course->id.'/'.$course->id); ?>">Take Assessment</a>
+					<?php if(count($history) > 0){ ?>
+						<table class="table table-bordered">
+							<tr>
+								<th>S.No.</th>
+								<th>Date Time</th>
+								<th>Marks</th>
+								<th>Status</th>
+							</tr>
+							<?php $i=1;foreach($history as $h){ ?>
+								<tr>
+									<td><?php echo $i; ?></td>
+									<td><?php echo $h->created_date; ?></td>
+									<td><?php if($h->evaluated == 1)echo $h->marks.'/'.$h->total_marks;else echo '--' ?></td>
+									<td><?php if($h->evaluated == 1){if($h->pass_marks > $h->marks)echo 'Fail'; else echo 'Pass';}else{ echo 'Submitted';} ?></td>
+								</tr>
+							<?php $i++;} ?>
+						</table>
 					<?php } ?>					
 					<?php }else if($chapter->content_type == 'Video' || $chapter->content_type == 'Audio'){ ?>
-						<div id="course_player"> Loading ...</div>
+						<!--div id="course_player"> Loading ...</div-->
+						<video width="100%" height="400" controls>
+						  <source src="<?php echo base_url($chapter->content);?>" type="video/mp4">
+						Your browser does not support the video tag.
+						</video>
 					<?php }elseif($chapter->content_type == 'SCORM' || $chapter->content_type == 'Document'){ ?>
 						<iframe style="overflow:hide;" src="<?php echo base_url($chapter->content);?>" width="800px" height="480px" ></iframe>
 					<?php }elseif($chapter->content_type == 'Image'){	?>
@@ -84,35 +89,13 @@
 			
 		</div>
 	</div>
-	<?php if($assessment){ ?>
-<!-- Modal -->
-<div id="confirm_modal" class="modal fade qtm" role="dialog" data-keyboard="false" data-backdrop="static">
-  <div class="modal-dialog" style="width:400px; top: 20%;">
-
-    <!-- Modal content-->
-    <div class="modal-content box">
-      <div class="modal-body">
-        <p>Are you sure want to submit the assessment?</p>     
-        <p>Total Questions : <?php echo count($questions); ?></p>     
-        <p>Answered Questions : <span id="answd">0</span></p>     
-        <p>Not answered Questions : <span id="nanswd"><?php echo count($questions); ?></span></p>     
-		<div class="text-center">
-			<button type="button" class="btn" id="submit">Submit</button>
-			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		</div>
-	   </div>
-    </div>
-
-  </div>
-</div>
-<?php } ?>	
 	<?php echo $footer; ?>
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jwplayer/jwplayer.js"></script>
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jwplayer/jwplayer.html5.js"></script>
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
-		<?php if(($chapter->content_type == 'Video' || $chapter->content_type == 'Audio') && !$assessment){ ?>
+		<?php if(($chapter->content_type == 'Video' || $chapter->content_type == 'Audio') && !$assessment && 0){ ?>
 		jwplayer("course_player").setup({
 			file: "<?php echo base_url($chapter->content);?>",
 			image: '<?php echo base_url('assets/images/backgrounds/bg.jpg');?>',
@@ -129,58 +112,7 @@
 		})
 	<?php } ?>	
 	});
-	<?php if($assessment){ ?>
-	$('#csubmit').on('click', function(){
-		var count = 0;
-		var total = parseInt(<?php echo count($questions); ?>);
-		$(".qt ol>li").each(function(){
-			var obj = $(this);var temp=0;
-			obj.find(".option").each(function(){
-				if($(this).is(":checked") && ($(this).data('type') == 'Single Choice' || $(this).data('type') == 'Multiple Choice'))
-					temp++
-				if($(this).val() !='' && ($(this).data('type') == 'text' || $(this).data('type') == 'upload'))
-					temp++
-			});
-			if(temp > 0)count++;
-		});
-		$("#answd").html(count);
-		$("#nanswd").html(total-count);
-		$("#confirm_modal").modal("show");
-	});
-	$('#submit').on('click', function(){
-		var answers = [];
-		var total = parseInt(<?php echo count($questions); ?>);
-		$(".qt ol>li").each(function(){
-			var answer = [];
-			var obj = $(this);
-			answer[0] = obj.data("qid");var ansa = [];var answ = '';
-			obj.find(".option").each(function(){
-				var obj2 = $(this);
-				if(obj2.is(":checked") && obj2.data('type') == 'Single Choice')
-					answ = obj2.val();
-				else if(obj2.is(":checked") && obj2.data('type') == 'Multiple Choice')
-					ansa.push(obj2.val());
-				else if((obj2.data('type') == 'text' || obj2.data('type') == 'upload'))
-					answ = obj2.val();
-			});
-			answer[1] = answ;
-			if(answer[1] == '')
-				 answer[1] = ansa;
-			answers.push(answer);
-		});
-		$('#submit').attr("disabled",true);
-		$('#submit').html("Please wait...");
-		$.ajax({
-			url:'<?php echo base_url(); ?>admin/submit_assessment',
-			type:'POST',
-			data: {'answers':answers,'assessment_id':'<?php echo $assessment->id; ?>','course_id':'<?php echo $course->id; ?>'},
-			dataType:'JSON'
-		}).done(function(data){
-			window.location.reload();
-		});
-		
-	});
-	<?php } ?>	
+	
 	</script>
 </body>
 </html>

@@ -12,6 +12,9 @@
 		<li class="<?php if($page == 'content')echo 'active';?>">
 			<a href="<?php echo base_url("admin/course/content/$id"); ?>"><i class="fa fa-files-o"></i> <span class="hidden-xs">Content</span></a>
 		</li>
+		<li class="<?php if($page == 'assessment')echo 'active';?>">
+			<a href="<?php echo base_url("admin/course/assessment/$id"); ?>"><i class="fa fa-question"></i> <span class="hidden-xs">Final Assessment</span></a>
+		</li>
 		<li class="<?php if($page == 'publish')echo 'active';?>">
 			<a href="<?php echo base_url("admin/course/publish/$id"); ?>"><i class="fa fa-sign-out"></i> <span class="hidden-xs">Publish</span></a>
 		</li>

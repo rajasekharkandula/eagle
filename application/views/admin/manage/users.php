@@ -9,9 +9,9 @@
 				<div class="col-md-6">
 					<h2 class="page-title">List of Users</h2>
 				</div>
-				<div class="col-md-4"></div>
-				<div class="col-md-2">
+				<div class="col-md-6">
 					<div class="page-actions text-right">
+						<button class="btn download" data-type="ALL_USERS">Download</button>
 						<a href="<?php echo base_url('admin/user'); ?>" class="btn"><i class="fa fa-plus"></i> Add new user</a>
 					</div>
 				</div>
@@ -48,7 +48,7 @@
 			</div>
 		</div>
 	</div>
-<div id="myModal" class="modal fade" role="dialog">
+<div id="myModal" class="modal fade alert" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -99,6 +99,7 @@
 			}
 		});
 	});
+	
 	</script>
 </body>
 </html>
